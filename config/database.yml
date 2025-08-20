@@ -59,16 +59,5 @@ test:
   database: exe_meter_test
 
 production:
-  primary:
-    <<: *default
-    url: <%= ENV["DATABASE_URL"] %>
-
-  cable:
-    <<: *default
-    url: <%= ENV["DATABASE_URL"] %>
-
-  queue:
-    <<: *default
-    url: <%= ENV["DATABASE_URL"] %>
-    pool: 5
-    # migrations_paths: db/queue_migrate   # 任意で分けられる
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>
