@@ -59,5 +59,11 @@ test:
   database: exe_meter_test
 
 production:
-  <<: *default
-  url: <%= ENV["DATABASE_URL"] %>
+  primary:
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
+
+  cable:
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
+    pool: 3  # 小さめ推奨（Pumaのthreads×workersと接続数のバランスを見る）
