@@ -59,9 +59,10 @@ test:
   database: exe_meter_test
 
 production:
-  <<: *default
-  database: exe_meter_production
-  username: <%= ENV["PGUSER"] %>
-  password: <%= ENV["PGPASSWORD"] %>
-  host: <%= ENV["PGHOST"] %>
-  port: <%= ENV.fetch("PGPORT", 5432) %>
+  primary:
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
+  cable:
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
+    migrations_paths: db/cable_migrate
