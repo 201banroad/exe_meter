@@ -66,4 +66,9 @@ production:
   cable:
     <<: *default
     url: <%= ENV["DATABASE_URL"] %>
-    pool: 3  # 小さめ推奨（Pumaのthreads×workersと接続数のバランスを見る）
+
+  queue:
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
+    pool: 5
+    # migrations_paths: db/queue_migrate   # 任意で分けられる
