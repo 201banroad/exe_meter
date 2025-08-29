@@ -8,7 +8,7 @@ class Session < ApplicationRecord
         total_seconds || 0
     end
 
-    def live_seconds #タイマー走っている場合と止まってる場合での経過時間
+    def live_seconds #タイマー走っている場合と止まってる場合での経過秒数？
         if running?
             persisted_seconds + ( Time.current - started_at ).to_i
         else
@@ -16,6 +16,27 @@ class Session < ApplicationRecord
         end
     end
 
+    def live_hours #秒数を時間に変換 経過”時間”
+        live_seconds / 3600.0
+    end
 
+
+        # 目標時給 = 目標金額 ÷ 目標時間
+    def hour_price
+        return 0 if target_hours.to_f <= 0
+        target_price.to_f / target_hours.to_f
+    end
+
+    # いままでの取り組みで“稼いだ価値”
+    # = 目標時給 × これまでの実働時間
+    def now_price
+        hour_price * live_hours
+    end
+
+    # 達成度を0.0〜1.0で表示
+    def progress_ratio
+        return 0.0 if target_price.to_f <= 0
+        [(now_price / target_price.to_f), 1.0].min  #1 10 0.1
+    end
 
 end
