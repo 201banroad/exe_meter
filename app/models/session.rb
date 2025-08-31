@@ -21,14 +21,14 @@ class Session < ApplicationRecord
     end
 
 
-        # 目標時給 = 目標金額 ÷ 目標時間
+        # １時間で稼げる金額 = 目標金額 ÷ 目標時間
     def hour_price
         return 0 if target_hours.to_f <= 0
         target_price.to_f / target_hours.to_f
     end
 
     # いままでの取り組みで“稼いだ価値”
-    # = 目標時給 × これまでの実働時間
+    # = １時給 × これまでの実働時間
     def now_price
         hour_price * live_hours
     end
