@@ -11,4 +11,15 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  root 'sessions#show'
+
+  resource :session, only: [:show] do
+    patch :update_target       # 目標金額/時間の更新
+    post  :start               # タイマースタート
+    post  :stop                # タイマーストップ
+  end
+
+
+
+
 end
