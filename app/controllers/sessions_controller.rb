@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  before_action :lead_session
+  before_action :load_session
 
   def show
   end
@@ -10,6 +10,7 @@ class SessionsController < ApplicationController
     else
       redirect_to root_path, alert: '更新に失敗しました'
     end
+  end
 
 
     def start #この機能で何がしたいのか、スタートアクションをしたら現在時刻を記録したい。進行中でないならアップデートする
@@ -17,8 +18,7 @@ class SessionsController < ApplicationController
       unless @session.running?
         @session.update!(started_at: Time.current, ended_at: nil)
       end
-
-      
+      redirect_to root_path, notice: '計測を開始しました'
     end
 
     def stop #エンドアクションをしたら、エンド時刻を記録、ゲインに代入して、もともとのDBに保存する
@@ -27,6 +27,7 @@ class SessionsController < ApplicationController
         gain = (Time.current - @session.started_at).to_i
         @session.update!(ended_at: Time.current, total_seconds: @session.persisted_seconds + gain )
       end
+      redirect_to root_path, notice: '計測を停止しました' 
     end
 
 
@@ -35,20 +36,6 @@ class SessionsController < ApplicationController
     def load_session  #セッションがあったらそれを使い、なかったら作る
       @session = Session.first_or_create!(total_seconds: 0, target_price: 0, target_hours: 0)
     end
-
-  end
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 end

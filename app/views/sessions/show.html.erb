@@ -21,6 +21,11 @@
 <% end %>
 
 
-<%=  %>
-スタートボタン、押すとスタート時刻記録、止めるとエンド時刻記録、カレント時刻を引いて、トータル時間に追加
-という機能をコントローラに定義して、ボタンをビューに追加？  その他細かい機能はまあ任せよう
+<% if @session.running? %>
+  <%= button_to "ストップ", stop_session_path, method: :post, form: { style: "display:inline;" } %>
+<% else %>
+  <%= button_to "スタート", start_session_path, method: :post, form: { style: "display:inline;" } %>
+<% end %>
+
+<%= notice %>
+
