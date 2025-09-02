@@ -1,15 +1,39 @@
 class SessionsController < ApplicationController
+  before_action :lead_session
 
-  def show #セッションがあったらそれを使い、なかったら作る
-    @session = Session.first_or_create!(total_seconds: 0, target_price: 0, target_hours: 0)
+  def show
   end
 
   def update_target
-    @session = Session.first_or_create!(total_seconds: 0, target_price: 0, target_hours: 0)
     if @session.update(params.require(:session).permit(:target_price, :target_hours))
       redirect_to root_path, notice: '目標を更新しました'
     else
       redirect_to root_path, alert: '更新に失敗しました'
+    end
+
+
+    def start #この機能で何がしたいのか、スタートアクションをしたら現在時刻を記録したい。進行中でないならアップデートする
+      # Session.save(started_at)　この書き方は、クラスに対してセーブしてるから微妙、これじゃどのインスタンスにアクセスしたいのかわからない
+      unless @session.running?
+        @session.update!(started_at: Time.current, ended_at: nil)
+      end
+
+      
+    end
+
+    def stop #エンドアクションをしたら、エンド時刻を記録、ゲインに代入して、もともとのDBに保存する
+
+      if @session.running? 
+        gain = (Time.current - @session.started_at).to_i
+        @session.update!(ended_at: Time.current, total_seconds: @session.persisted_seconds + gain )
+      end
+    end
+
+
+    private
+
+    def load_session  #セッションがあったらそれを使い、なかったら作る
+      @session = Session.first_or_create!(total_seconds: 0, target_price: 0, target_hours: 0)
     end
 
   end
