@@ -8,7 +8,7 @@ class Session < ApplicationRecord
         total_seconds || 0
     end
 
-    def live_seconds #タイマー走っている場合と止まってる場合での経過秒数？
+    def live_seconds #経過秒数。タイマー走っている場合と止まってる場合
         if running?
             persisted_seconds + ( Time.current - started_at ).to_i
         else

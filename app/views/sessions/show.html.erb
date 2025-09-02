@@ -1,0 +1,21 @@
+<h1>市場価値メーター（最小版）</h1>
+
+<p>目標金額: ¥<%= @session.target_price %></p>
+<p>目標時間: <%= @session.target_hours %> h</p>
+
+<p>合計時間: <%= @session.live_hours.round(2) %> h（<%= @session.live_seconds %> 秒）</p>
+<p>目標時給: ¥<%= @session.hour_price.round %>/h</p>
+<p>現在の市場価値: ¥<%= @session.now_price.round %></p>
+
+<h2>目標の入力</h2>
+
+
+<%= form_with model: @session, url: update_target_session_path, method: :patch, local: true do |f| %>
+    <label>目標金額(¥)</label>
+    <%= f.number_field :target_price, step: 1 %>
+
+    <label>目標時間(h)</label>
+    <%= f.number_field :target_hours, step: 0.5 %>
+
+    <%= f.submit "保存" %>
+<% end %>
