@@ -6,8 +6,10 @@ console.log("[tiny] file loaded")
 
 export default class extends Controller {
   static targets = ["elapsed"]
-  static values = { initialSeconds: Number }
-
+  static values = {
+    initialSeconds: Number, // サーバから渡す初期秒
+    running: Boolean        // サーバで実行中か
+  }
 connect() {
   console.log("[tiny] connect")
   this.seconds = this.initialSecondsValue || 0   // ← サーバーから来た値を使う
@@ -17,6 +19,9 @@ connect() {
 
   this._beforeCacheHandler = () => this.stop()
   document.addEventListener("turbo:before-cache", this._beforeCacheHandler)
+
+   // サーバが実行中なら自動で再開
+    if (this.runningValue) this.start()
 }
 
 disconnect() {

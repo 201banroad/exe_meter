@@ -31,8 +31,15 @@
 
 <div
   data-controller="tiny-timer"
-  data-tiny-timer-initial-seconds-value="<%= @session.live_seconds %>">
+  data-tiny-timer-initial-seconds-value="<%= @session.live_seconds %>"
+  data-tiny-timer-running-value="<%= @session.running? %>">
   <span data-tiny-timer-target="elapsed">00:00:00</span>
-  <button type="button" data-action="click->tiny-timer#start">Start</button>
-  <button type="button" data-action="click->tiny-timer#stop">Stop</button>
 </div>
+
+<%= link_to "Start",
+    start_session_path,
+    data: { turbo_method: :post, action: "click->tiny-timer#start" } %>
+
+<%= link_to "Stop",
+    stop_session_path,
+    data: { turbo_method: :post, action: "click->tiny-timer#stop" } %>
