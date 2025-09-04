@@ -37,9 +37,20 @@
 </div>
 
 <%= link_to "Start",
-    start_session_path,
-    data: { turbo_method: :post, action: "click->tiny-timer#start" } %>
+            start_session_path,
+            data: {
+              turbo_method: :post,
+              action: "click->tiny-timer#handleStartClick",
+              tiny_tiny_timer_target: nil, # ダミー防止（無視されます）
+              tiny_timer_target: "startButton"
+            },
+            class: "btn start" %>
 
 <%= link_to "Stop",
-    stop_session_path,
-    data: { turbo_method: :post, action: "click->tiny-timer#stop" } %>
+            stop_session_path,
+            data: {
+              turbo_method: :post,
+              action: "click->tiny-timer#handleStopClick",
+              tiny_timer_target: "stopButton"
+            },
+            class: "btn stop" %>

@@ -20,9 +20,23 @@ connect() {
   this._beforeCacheHandler = () => this.stop()
   document.addEventListener("turbo:before-cache", this._beforeCacheHandler)
 
+    // 先にボタン状態を初期化
+    this.updateButtons()
+
    // サーバが実行中なら自動で再開
     if (this.runningValue) this.start()
 }
+
+  // --- クリックハンドラ（無効時はPOSTさせない） ---
+  handleStartClick(event) {
+    if (this.isRunning) { event.preventDefault(); return }
+    this.start() // ← JS表示を即更新（POSTはそのまま進む）
+  }
+
+    handleStopClick(event) {
+    if (!this.isRunning) { event.preventDefault(); return }
+    this.stop()
+  }
 
 disconnect() {
   this.stop()
@@ -51,6 +65,22 @@ disconnect() {
       this.intervalId = null
     }
     this.render()
+  }
+
+    // --- ボタンの有効/無効を切り替え ---
+  updateButtons() {
+    if (this.hasStartButtonTarget) this._setDisabled(this.startButtonTarget, this.isRunning)
+    if (this.hasStopButtonTarget)  this._setDisabled(this.stopButtonTarget, !this.isRunning)
+  }
+
+  _setDisabled(el, disabled) {
+    el.setAttribute("aria-disabled", disabled ? "true" : "false")
+    el.classList.toggle("is-disabled", disabled)
+    if (disabled) {
+      el.setAttribute("tabindex", "-1")
+    } else {
+      el.removeAttribute("tabindex")
+    }
   }
 
   render() {
