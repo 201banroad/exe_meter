@@ -54,4 +54,12 @@
               tiny_timer_target: "stopButton"
             },
             class: "btn stop" %>
-            
+
+<%= link_to "Reset",
+            reset_session_path,
+            data: {
+                turbo_method: :post,
+                turbo_confirm: "本当にリセットしますか？（合計時間が0に戻ります）",
+                action: "click->tiny-timer#stop"
+            },
+            class: "btn reset" %>

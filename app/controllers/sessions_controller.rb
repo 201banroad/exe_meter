@@ -30,6 +30,16 @@ class SessionsController < ApplicationController
       redirect_to root_path, notice: '計測を停止しました' 
     end
 
+    def reset
+      # 進行中でも強制停止してゼロに戻す
+      if @session.update(total_seconds: 0, started_at: nil, ended_at: nil)
+        redirect_to root_path, notice: 'リセットしました'
+      else
+        redirect_to root_path, alert: 'リセットに失敗しました'
+      end
+    end
+
+
 
     private
 

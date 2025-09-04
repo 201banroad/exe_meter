@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     patch :update_target       # 目標金額/時間の更新
     post  :start               # タイマースタート
     post  :stop                # タイマーストップ
+    post  :reset
   end
 
 
