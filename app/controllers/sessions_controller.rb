@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
     if @session.update(params.require(:session).permit(:target_price, :target_hours))
       redirect_to root_path, notice: '目標を更新しました'
     else
-      render :show, status: unprosessable_entity
+      render :show, status: :unprocessable_entity
     end
   end
 
