@@ -1,5 +1,12 @@
 class Session < ApplicationRecord
 
+    # validated[:target_price >= 0,:target_hours >= 0, ]
+
+    # 空は許可、入っているなら 0 以上の数値（小数OK）
+
+    validates :target_price, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+    validates :target_hours, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+
     def running?   #セッションが進行中かどうか
         started_at.present? && ended_at.nil?
     end

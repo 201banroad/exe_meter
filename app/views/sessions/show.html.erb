@@ -11,14 +11,30 @@
 <% end %>
 
 <h2>目標の入力</h2>
-<%= form_with model: @session, url: update_target_session_path, method: :patch, local: true do |f| %>
-  <label>目標金額(¥)</label>
-  <%= f.number_field :target_price, step: 1 %>
 
-  <label>目標時間(h)</label>
-  <%= f.number_field :target_hours, step: 0.5 %>
+<% if @session.errors.any? %>
+    <strong>入力に誤りがあります</strong>
+    <% @session.errors.full_messages.each do |msg| %>
+        <p><%= msg %></p>
+    <% end %>
+<% end %>
+
+<%= form_with model: @session, url: update_target_session_path, method: :patch, local: true do |f| %>
+
+    <label>目標金額(¥)</label>
+    <%= f.number_field :target_price, step: 1 %>
+    <% @session.errors.full_messages_for(:target_price).each do |msg| %>
+        <%= msg %>
+    <% end %>
+
+    <label>目標時間(h)</label>
+    <%= f.number_field :target_hours, step: 0.5 %>
+    <% @session.errors.full_messages_for(:target_hours).each do |msg| %>
+        <%= msg %>
+    <% end %>
 
   <%= f.submit "保存" %>
+
 <% end %>
 
 <%# --- ここからサンプル（コメントアウト） ---
@@ -63,3 +79,4 @@
                 action: "click->tiny-timer#stop"
             },
             class: "btn reset" %>
+
