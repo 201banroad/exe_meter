@@ -14,7 +14,6 @@ class SessionsController < ApplicationController
 
 
     def start #この機能で何がしたいのか、スタートアクションをしたら現在時刻を記録したい。進行中でないならアップデートする
-      # Session.save(started_at)　この書き方は、クラスに対してセーブしてるから微妙、これじゃどのインスタンスにアクセスしたいのかわからない
       unless @session.running?
         @session.update!(started_at: Time.current, ended_at: nil)
       end

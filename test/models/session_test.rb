@@ -82,6 +82,48 @@ class SessionTest < ActiveSupport::TestCase
     end
   end
 
+  test "progress_ratio is 0.0 when target_price is zero" do
+    session = Session.new(target_price: 0, target_hours: 2, total_seconds: 7200)
+    assert_equal 0.0, session.progress_ratio
+  end
+
+  # 2) 途中の進捗 (例: 30%)
+  test "progress_ratio returns fractional value below 1.0" do
+    # 時給 500円 (= 1000 ÷ 2h)、実働 0.6h (= 2160秒) → now_price=300
+    session = Session.new(target_price: 1000, target_hours: 2, total_seconds: 2160)
+    assert_in_delta 0.3, session.progress_ratio, 1e-6
+  end
+
+  # 3) ちょうど達成 (1.0)
+  test "progress_ratio returns 1.0 when goal reached" do
+    # 時給 500円、実働 2h (= 7200秒) → now_price=1000
+    session = Session.new(target_price: 1000, target_hours: 2, total_seconds: 7200)
+    assert_equal 1.0, session.progress_ratio
+  end
+
+  # 4) 超過しても 1.0 にクリップ
+  test "progress_ratio does not exceed 1.0 even when now_price > target_price" do
+    # 時給 500円、実働 3h (= 10800秒) → now_price=1500
+    session = Session.new(target_price: 1000, target_hours: 2, total_seconds: 10800)
+    assert_equal 1.0, session.progress_ratio
+  end
+
+  # 5) 実行中でも正しく増える
+  test "progress_ratio increases while running" do
+    base_time = Time.current.change(usec: 0)
+    travel_to(base_time) do
+      session = Session.new(
+        target_price: 1200,
+        target_hours: 2,  # 時給 600
+        total_seconds: 1800, # 0.5h
+        started_at: Time.current,
+        ended_at: nil
+      )
+      travel 3600.seconds # +1h → 合計1.5h
+      assert_in_delta 0.75, session.progress_ratio, 0.01
+    end
+  end
+
 
   #ここからバリデーションのテスト　　ほかのひらがなとか弾くテスト書く？と思ったけどRailsの機能で元々弾かれてるからわざわざ書かなくてOK
   test "target_price and target_hours are invalid when negative" do
