@@ -1,6 +1,7 @@
 require "test_helper"
 
 class SessionsControllerTest < ActionDispatch::IntegrationTest
+    include ActiveSupport::Testing::TimeHelpers
 
     test "get session" do
         get session_path
@@ -11,8 +12,8 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
         session = Session.first_or_create!(total_seconds: 0, target_price: 0, target_hours: 0)
         post start_session_path
         session.reload
-        asert_not_nil session.started_at
-        asert_nil session.ended_at
+        assert_not_nil session.started_at
+        assert_nil session.ended_at
         assert_redirected_to root_path
     end
 
@@ -62,7 +63,6 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
         base_time = Time.current.change(usec: 0)
         session = Session.first_or_create!(total_seconds: 10, started_at: base_time, ended_at: nil)
 
-        include ActiveSupport::Testing::TimeHelpers
         travel_to(base_time) do
             # 2秒経過させて 1回目の stop（加算されることを確認）
             travel 2.seconds
@@ -93,7 +93,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
         assert_equal 2, session.target_hours
         assert_redirected_to root_path
     end
-    
+
     test "update_target rejects negative price with 422 and does not persist" do
         session = Session.create!(target_price: 1000, target_hours: 2)
 
@@ -126,6 +126,85 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
         assert_equal 2, session.target_hours      # 変わっていない
         assert_response :unprocessable_entity
     end
+
+    test "reset resets session to zero and clears times" do
+        session = Session.first_or_create!(total_seconds: 100, started_at: Time.current, ended_at: Time.current)
+
+        post reset_session_path
+        session.reload
+
+        assert_equal 0, session.total_seconds
+        assert_nil session.started_at
+        assert_nil session.ended_at
+        assert_redirected_to root_path
+        assert_equal "リセットしました", flash[:notice]
+    end
+
+    test "reset while running clears running state and zeroes total_seconds" do
+        session = Session.first_or_create!(total_seconds: 50, started_at: Time.current, ended_at: nil)
+
+        post reset_session_path
+        session.reload
+
+        assert_equal 0, session.total_seconds
+        assert_nil session.started_at
+        assert_nil session.ended_at
+        assert_redirected_to root_path
+        assert_equal "リセットしました", flash[:notice]
+    end
+
+    test "reset does nothing when already reset" do
+        session = Session.first_or_create!(total_seconds: 0, started_at: nil, ended_at: nil)
+
+        post reset_session_path
+        session.reload
+
+        assert_equal 0, session.total_seconds
+        assert_nil session.started_at
+        assert_nil session.ended_at
+        assert_redirected_to root_path
+        assert_equal "リセットしました", flash[:notice]
+    end
+
+    test "reset clears past completed session and zeroes total_seconds" do #履歴のセッションに対してもリセットできるか
+        session = Session.first_or_create!(total_seconds: 100, started_at: 1.hour.ago, ended_at: 30.minutes.ago)
+
+        post reset_session_path
+        session.reload
+
+        assert_equal 0, session.total_seconds
+        assert_nil session.started_at
+        assert_nil session.ended_at
+        assert_redirected_to root_path
+        assert_equal "リセットしました", flash[:notice]
+    end
+
+    test "reset twice is idempotent" do
+        session = Session.first_or_create!(total_seconds: 50, started_at: Time.current, ended_at: nil)
+
+        # 1回目のリセット
+        post reset_session_path
+        session.reload
+        assert_equal 0, session.total_seconds
+        assert_nil session.started_at
+        assert_nil session.ended_at
+        assert_redirected_to root_path
+        assert_equal "リセットしました", flash[:notice]
+
+        # 2回目のリセット（何も変わらないことを確認）
+        post reset_session_path
+        session.reload
+        assert_equal 0, session.total_seconds
+        assert_nil session.started_at
+        assert_nil session.ended_at
+        assert_redirected_to root_path
+        assert_equal "リセットしました", flash[:notice]
+    end
+
+
+
+    
+
 
 
 end
