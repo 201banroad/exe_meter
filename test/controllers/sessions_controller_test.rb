@@ -93,6 +93,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
         assert_equal 2, session.target_hours
         assert_redirected_to root_path
     end
+    
     test "update_target rejects negative price with 422 and does not persist" do
         session = Session.create!(target_price: 1000, target_hours: 2)
 
