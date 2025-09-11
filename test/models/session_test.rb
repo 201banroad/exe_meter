@@ -1,6 +1,7 @@
 require "test_helper"
 
 class SessionTest < ActiveSupport::TestCase
+  include ActiveSupport::Testing::TimeHelpers
   # test "the truth" do
   #   assert true
   # end
@@ -55,7 +56,7 @@ class SessionTest < ActiveSupport::TestCase
   end
 
   test "now_price multiplies hour_price and live_hours when stopped" do#停止中の整数ケース
-    sessison = Session.new(target_price: 1000, target_hours: 2, total_seconds: 7200)
+    session = Session.new(target_price: 1000, target_hours: 2, total_seconds: 7200)
     assert_equal 1000, session.now_price
   end
 
@@ -150,5 +151,7 @@ class SessionTest < ActiveSupport::TestCase
     session = Session.new(target_price: "", target_hours: "")
     assert_not session.valid?
   end
+
+ 
 
 end

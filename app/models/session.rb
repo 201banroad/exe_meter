@@ -1,6 +1,6 @@
 class Session < ApplicationRecord
 
-    # validated[:target_price >= 0,:target_hours >= 0, ]
+    # validates[:target_price >= 0,:target_hours >= 0, ]
 
 
     validates :target_price, numericality: { greater_than_or_equal_to: 0 }, presence: true
@@ -43,6 +43,8 @@ class Session < ApplicationRecord
         return 0.0 if target_price.to_f <= 0
         [(now_price / target_price.to_f), 1.0].min  #1 10 0.1
     end
+
+    
 
 end
 
