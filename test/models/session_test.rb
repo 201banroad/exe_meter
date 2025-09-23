@@ -152,7 +152,40 @@ class SessionTest < ActiveSupport::TestCase
     assert_not session.valid?
   end
 
- 
+  test "today_total_seconds sums only today's finished intervals" do
+    travel_to Time.zone.local(2025, 9, 18, 12, 0, 0) do
+      session = Session.new(total_seconds: 0, target_price: 0, target_hours: 0)
+
+      # 昨日の完了区間（含まれない）
+      session.work_intervals << WorkInterval.new(
+        started_at: 1.day.ago,
+        ended_at: 1.day.ago + 120,
+        duration_sec: 120
+      )
+
+      # 今日の完了区間（含まれる）
+      session.work_intervals << WorkInterval.new(
+        started_at: Time.zone.now,
+        ended_at: Time.zone.now + 60,
+        duration_sec: 60
+      )
+
+      session.work_intervals << WorkInterval.new(
+        started_at: Time.zone.now,
+        ended_at: Time.zone.now + 120,
+        duration_sec: 120
+      )
+
+      # 今日の進行中（含まれない）
+      session.work_intervals << WorkInterval.new(
+        started_at: Time.zone.now,
+        ended_at: nil,
+        duration_sec: nil
+      )
+
+      assert_equal 180, session.today_total_seconds
+    end
+  end
 
 
 
