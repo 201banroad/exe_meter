@@ -2,6 +2,7 @@ class Session < ApplicationRecord
 
     # validates[:target_price >= 0,:target_hours >= 0, ]
 
+    has_many :work_intervals, dependent: :destroy
 
     validates :target_price, numericality: { greater_than_or_equal_to: 0 }, presence: true
     validates :target_hours, numericality: { greater_than_or_equal_to: 0 }, presence: true
@@ -44,7 +45,22 @@ class Session < ApplicationRecord
         [(now_price / target_price.to_f), 1.0].min  #1 10 0.1
     end
 
-    
+    def today_total_seconds
+        today_range = Time.zone.today.all_day
+
+        if persisted? #保存済み → DBにあるデータをSQLで集計する（速い・本番用）。
+        work_intervals
+            .where(ended_at: today_range)
+            .where.not(duration_sec: nil)
+            .sum(:duration_sec)
+        else
+        work_intervals #未保存 → まだDBにない一時的な関連を、配列操作で集計する（テストや一時的な利用のため）
+            .select { |wi| wi.ended_at.present? && today_range.cover?(wi.ended_at) }
+            .sum { |wi| wi.duration_sec.to_i }
+        end
+    end
+
+        
 
 end
 
