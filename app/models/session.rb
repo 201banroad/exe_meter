@@ -45,6 +45,7 @@ class Session < ApplicationRecord
         [(now_price / target_price.to_f), 1.0].min  #1 10 0.1
     end
 
+    
     def today_total_seconds
         today_range = Time.zone.today.all_day
 

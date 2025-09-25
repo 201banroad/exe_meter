@@ -13,12 +13,20 @@ class SessionsController < ApplicationController
   end
 
 
-    def start #この機能で何がしたいのか、スタートアクションをしたら現在時刻を記録したい。進行中でないならアップデートする
+    def start  #この機能で何がしたいのか、スタートアクションをしたら現在時刻を記録したい。進行中でないならアップデートする
       unless @session.running?
-        @session.update!(started_at: Time.current, ended_at: nil)
+        now = Time.current
+        # セッションを開始
+        @session.update!(started_at: now, ended_at: nil)
+
+        # 進行中の WorkInterval が無いときだけ新規作成
+        @session.work_intervals.find_or_create_by!(ended_at: nil) do |wi|
+          wi.started_at = now
+        end
       end
       redirect_to root_path, notice: '計測を開始しました'
     end
+
 
     def stop #エンドアクションをしたら、エンド時刻を記録、ゲインに代入して、もともとのDBに保存する
 
