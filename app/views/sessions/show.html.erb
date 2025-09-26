@@ -74,3 +74,13 @@
             },
             class: "btn reset" %>
 
+<!-- app/views/sessions/show.html.erb の見やすい位置に追記 -->
+<section class="today-summary">
+  <h2>今日のサマリー</h2>
+  <p>合計時間：<strong><%= format_duration(@session.today_total_seconds) %></strong></p>
+  <p>市場価値（今日）： 
+    <strong>
+      <%= number_to_currency(@session.hour_price * (@session.today_total_seconds / 3600.0), unit: "¥", precision: 0) %>
+    </strong>
+  </p>
+</section>
