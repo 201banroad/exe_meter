@@ -28,23 +28,37 @@ class SessionsController < ApplicationController
     end
 
 
-    def stop #エンドアクションをしたら、エンド時刻を記録、ゲインに代入して、もともとのDBに保存する
+  def stop
+    if @session.running?
+      now = Time.current
 
-      if @session.running? 
-        gain = (Time.current - @session.started_at).to_i
-        @session.update!(ended_at: Time.current, total_seconds: @session.persisted_seconds + gain )
-      end
-      redirect_to root_path, notice: '計測を停止しました' 
-    end
-
-    def reset
-      # 進行中でも強制停止してゼロに戻す
-      if @session.update(total_seconds: 0, started_at: nil, ended_at: nil)
-        redirect_to root_path, notice: 'リセットしました'
+      # 進行中の WorkInterval を確定
+      wi = @session.work_intervals.find_by(ended_at: nil)
+      if wi
+        gain = (now - wi.started_at).to_i
+        wi.update!(ended_at: now, duration_sec: gain)
       else
-        redirect_to root_path, alert: 'リセットに失敗しました'
+        # 念のため保険としてあまり起こらないけどWIが無いとき
+        gain = (now - @session.started_at).to_i
       end
+
+      # セッションの停止と累積秒の更新
+      @session.update!(ended_at: now, total_seconds: @session.persisted_seconds + gain)
     end
+    redirect_to root_path, notice: '計測を停止しました'
+  end
+
+
+  def reset
+    # 未完了の WorkInterval は削除（履歴は残す方針なので完了済みは残す）
+    @session.work_intervals.where(ended_at: nil).delete_all
+
+    if @session.update(total_seconds: 0, started_at: nil, ended_at: nil)
+      redirect_to root_path, notice: 'リセットしました'
+    else
+      redirect_to root_path, alert: 'リセットに失敗しました'
+    end
+  end
 
 
     private
