@@ -3,6 +3,7 @@ class Session < ApplicationRecord
     # validates[:target_price >= 0,:target_hours >= 0, ]
 
     has_many :work_intervals, dependent: :destroy
+    belongs_to :user
 
     validates :target_price, numericality: { greater_than_or_equal_to: 0 }, presence: true
     validates :target_hours, numericality: { greater_than_or_equal_to: 0 }, presence: true

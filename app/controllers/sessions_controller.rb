@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  before_action :authenticate_user!
+
   before_action :load_session
 
   def show
@@ -13,13 +15,12 @@ class SessionsController < ApplicationController
   end
 
 
-    def start  #この機能で何がしたいのか、スタートアクションをしたら現在時刻を記録したい。進行中でないならアップデートする
+    def start
       unless @session.running?
         now = Time.current
-        # セッションを開始
         @session.update!(started_at: now, ended_at: nil)
 
-        # 進行中の WorkInterval が無いときだけ新規作成
+        # 進行中の WorkIntervalがもしすでにある場合はそれを使う（基本的にはありえないがもしものため）
         @session.work_intervals.find_or_create_by!(ended_at: nil) do |wi|
           wi.started_at = now
         end
@@ -28,17 +29,18 @@ class SessionsController < ApplicationController
     end
 
 
+
   def stop
     if @session.running?
       now = Time.current
 
-      # 進行中の WorkInterval を確定
       wi = @session.work_intervals.find_by(ended_at: nil)
+
       if wi
         gain = (now - wi.started_at).to_i
         wi.update!(ended_at: now, duration_sec: gain)
       else
-        # 念のため保険としてあまり起こらないけどWIが無いとき
+        # 念のため保険としてあまり起こらないけどWIが無いとき、なくてもここでは新しく作らない、あくまでStopの処理なので
         gain = (now - @session.started_at).to_i
       end
 
@@ -63,8 +65,8 @@ class SessionsController < ApplicationController
 
     private
 
-    def load_session  #セッションがあったらそれを使い、なかったら作る
-      @session = Session.first_or_create!(total_seconds: 0, target_price: 0, target_hours: 0)
+    def load_session 
+      @session = current_user.session || current_user.create_session!(total_seconds: 0, target_price: 0, target_hours: 0)
     end
 
 

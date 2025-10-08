@@ -16,6 +16,12 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
         session = build_session(total_seconds: 0, target_price: 0, target_hours: 0)
         post start_session_path
         session.reload
+
+        assert_equal 1, session.work_intervals.where(ended_at: nil).count
+        wi = session.work_intervals.order(:created_at).last
+        assert_not_nil wi.started_at
+        assert_nil wi.ended_at
+
         assert_not_nil session.started_at
         assert_nil session.ended_at
         assert_redirected_to root_path
@@ -27,15 +33,16 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
             travel_to(base_time) do
                 session.update!(started_at: Time.current, ended_at: nil)
-
                 travel 2.seconds
                 post stop_session_path
                 session.reload
                 assert_equal 12, session.total_seconds  
                 assert_not_nil session.ended_at
                 assert_redirected_to root_path
+              
             end
     end
+
 
     test "end test when dont running" do #走ってない時にストップ押しても無害テスト
         session = build_session(total_seconds: 10, started_at: nil, ended_at: nil)

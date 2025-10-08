@@ -1,13 +1,11 @@
-<h1>市場価値メーター（最小版）</h1>
+<h1>市場価値メーター</h1>
 
-<p>目標金額: ¥<%= @session.target_price %></p>
-<p>達成までの時間: <%= @session.target_hours %> h</p>
-<p>合計時間: <%= @session.live_hours.round(2) %> h（<%= @session.live_seconds %> 秒）</p>
-<p>１時間で稼げる: ¥<%= @session.hour_price.round %>/h</p>
-<p>現在の市場価値: ¥<%= @session.now_price.round %></p>
-
-<% if notice.present? %>
-  <p class="notice"><%= notice %></p>
+<% if user_signed_in? %>
+  <span><%= current_user.email %></span>
+  <%= link_to "ログアウト", destroy_user_session_path, data: { turbo_method: :delete } %>
+<% else %>
+  <%= link_to "ログイン", new_user_session_path %>
+  <%= link_to "新規登録", new_user_registration_path %>
 <% end %>
 
 <h2>目標の入力</h2>
@@ -27,9 +25,12 @@
         <%= msg %>
     <% end %>
 
-  <%= f.submit "保存" %>
+  <%= f.submit "変更" %>
 
 <% end %>
+
+
+
 
 <%# --- ここからサンプル（コメントアウト） ---
 <div data-controller="tiny-timer">
@@ -65,7 +66,7 @@
             },
             class: "btn stop" %>
 
-<%= link_to "Reset",
+<%= link_to "タイマーReset",
             reset_session_path,
             data: {
                 turbo_method: :post,
@@ -73,12 +74,22 @@
                 action: "click->tiny-timer#stop"
             },
             class: "btn reset" %>
+            <% if notice.present? %>
+    <p class="notice"><%= notice %></p>
+    <% end %>
+
+<h2>詳細</h2>
+<p>１時間で稼げる額: ¥<%= @session.hour_price.round %></p>
+<p>現在の市場価値: ¥<%= @session.now_price.round %></p>
+
+
+
 
 <!-- app/views/sessions/show.html.erb の見やすい位置に追記 -->
 <section class="today-summary">
-  <h2>今日のサマリー</h2>
-  <p>合計時間：<strong><%= format_duration(@session.today_total_seconds) %></strong></p>
-  <p>市場価値（今日）： 
+  <h2>今日の達成（24時リセット）</h2>
+  <p>1日の合計時間：<strong><%= format_duration(@session.today_total_seconds) %></strong></p>
+  <p>1日で稼いだ価値： 
     <strong>
       <%= number_to_currency(@session.hour_price * (@session.today_total_seconds / 3600.0), unit: "¥", precision: 0) %>
     </strong>
