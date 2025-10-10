@@ -62,6 +62,26 @@ class SessionsController < ApplicationController
     end
   end
 
+  def update_time#これは自分で書いてみたコード
+    if @session.running?
+      redirect_to root_path, alert: 'タイマー進行中は更新できません'#でもこれDBには送られちゃうのか？
+    else
+      @session.update(total_seconds: params[:manual_time], started_at: nil, ended_at: nil)
+    end
+  end
+
+  def update_time
+    if @session.running?
+      redirect_to root_path, alert: 'タイマー進行中は更新できません'
+    end
+    
+    str = params.dig(:session, :manual_time).to_s.strip
+
+    if str.blank?
+      redirect_to root_path, alert: '時間を入力してください（HH:MM:SS）' and return
+    end
+  end
+
 
     private
 
