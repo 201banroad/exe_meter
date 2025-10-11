@@ -72,14 +72,33 @@ class SessionsController < ApplicationController
 
   def update_time
     if @session.running?
-      redirect_to root_path, alert: 'タイマー進行中は更新できません'
+      redirect_to root_path, alert: 'タイマー進行中は更新できません' and return
     end
-    
+
     str = params.dig(:session, :manual_time).to_s.strip
 
     if str.blank?
       redirect_to root_path, alert: '時間を入力してください（HH:MM:SS）' and return
     end
+
+    unless /\A\d{1,2}:\d{2}:\d{2}\z/.match?(str)
+      redirect_to root_path, alert: '時間の形式が正しくありません（例: 01:30:00）' and return
+    end
+
+    hh, mm, ss = str.split(":").map(&:to_i)
+    unless (0 <= mm && mm < 60) && (0 <= ss && ss < 60)
+      redirect_to root_path, alert: '時間の形式が正しくありません（例: 01:30:00）' and return
+    end
+
+    manual_seconds = hh * 3600 + mm * 60 + ss
+
+    if @session.update(total_seconds: manual_seconds, started_at: nil, ended_at: nil)
+      redirect_to root_path, notice: "更新に成功しました"
+    else
+      redirect_to root_path, notice: "更新に失敗しました"
+    end
+
+
   end
 
 

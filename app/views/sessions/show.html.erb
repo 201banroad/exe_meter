@@ -28,10 +28,6 @@
   <%= f.submit "変更" %>
 
 <% end %>
-
-
-
-
 <%# --- ここからサンプル（コメントアウト） ---
 <div data-controller="tiny-timer">
   <span data-tiny-timer-target="elapsed">00:00:00</span>
@@ -47,25 +43,19 @@
   <span data-tiny-timer-target="elapsed">00:00:00</span>
 </div>
 
-<section class ="manual-time">
-    <h2>手入力でタイマー調整</h2>
-    <div>
-        <label for="manual-time">HH:MM:SS</label>
-        <input
-            id= "manual_time"
-            name= "session[manual_time]"
-            type= "text"
-            placeholder="00:45:30"
-            pattern="^\d{1,2}:\d{2}:\d{2}$"
-            inputmode="numeric"
-            class="manual-time-input"        
-        />
-        <button type= "button" disabled title= "次のステップで有効になります">
-            時間を更新
-        </button>
-        <small>例：01:30:00(1時間30分)</small>
-    </div>
-</section>
+
+
+<%= form_with url: update_time_session_path, method: :patch, local: true do %>
+    <label for="manual_time">HH:MM:SS</label>
+
+    <%= text_field_tag "session[manual_time]", nil,
+        placeholder: "01:30:00",
+        pattern: "\\d{1,2}:\\d{2}:\\d{2}",
+        inputmode: "numeric" %>
+
+    <%= submit_tag "時間を更新" %>
+<% end %>
+
 
 <%= link_to "Start",
             start_session_path,
