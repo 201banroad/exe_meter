@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   # root "posts#index"
   root 'sessions#show'
 
-  resource :session, only: [:show] do
+  resource :work_session, only: [:show] do
     patch :update_target  # 目標金額/時間の更新
     patch :update_time
     post  :start               # タイマースタート
