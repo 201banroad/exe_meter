@@ -1,4 +1,4 @@
-class SessionsController < ApplicationController
+class WorkSessionsController < ApplicationController
   before_action :authenticate_user!
   before_action :load_session
 

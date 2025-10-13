@@ -12,7 +12,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  root 'sessions#show'
+  root 'work_sessions#show'
 
   resource :work_session, only: [:show] do
     patch :update_target  # 目標金額/時間の更新
