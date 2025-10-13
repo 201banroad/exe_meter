@@ -62,14 +62,6 @@ class SessionsController < ApplicationController
     end
   end
 
-  def update_time#これは自分で書いてみたコード
-    if @session.running?
-      redirect_to root_path, alert: 'タイマー進行中は更新できません'#でもこれDBには送られちゃうのか？
-    else
-      @session.update(total_seconds: params[:manual_time], started_at: nil, ended_at: nil)
-    end
-  end
-
   def update_time
     if @session.running?
       redirect_to root_path, alert: 'タイマー進行中は更新できません' and return
@@ -95,7 +87,7 @@ class SessionsController < ApplicationController
     if @session.update(total_seconds: manual_seconds, started_at: nil, ended_at: nil)
       redirect_to root_path, notice: "更新に成功しました"
     else
-      redirect_to root_path, notice: "更新に失敗しました"
+      redirect_to root_path, alert: "更新に失敗しました"
     end
 
 

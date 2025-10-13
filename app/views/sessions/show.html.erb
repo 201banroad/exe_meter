@@ -44,19 +44,6 @@
 </div>
 
 
-
-<%= form_with url: update_time_session_path, method: :patch, local: true do %>
-    <label for="manual_time">HH:MM:SS</label>
-
-    <%= text_field_tag "session[manual_time]", nil,
-        placeholder: "01:30:00",
-        pattern: "\\d{1,2}:\\d{2}:\\d{2}",
-        inputmode: "numeric" %>
-
-    <%= submit_tag "時間を更新" %>
-<% end %>
-
-
 <%= link_to "Start",
             start_session_path,
             data: {
@@ -87,6 +74,19 @@
             <% if notice.present? %>
     <p class="notice"><%= notice %></p>
     <% end %>
+
+<h2>タイマー編集</h2>
+<%= form_with url: update_time_session_path, method: :patch, local: true do %>
+
+    <label for="manual_time">HH:MM:SS</label>
+
+    <%= text_field_tag "session[manual_time]", nil,
+        placeholder: "01:30:00",
+        pattern: "\\d{1,2}:\\d{2}:\\d{2}",
+        inputmode: "numeric" %>
+
+    <%= submit_tag "時間を更新" %>
+<% end %>
 
 <h2>詳細</h2>
 <p>１時間で稼げる額: ¥<%= @session.hour_price.round %></p>
