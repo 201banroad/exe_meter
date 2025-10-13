@@ -1,4 +1,4 @@
-class Session < ApplicationRecord
+class WorkSession < ApplicationRecord
 
     # validates[:target_price >= 0,:target_hours >= 0, ]
 

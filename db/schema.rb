@@ -10,21 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_07_070230) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_13_091129) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
-
-  create_table "sessions", force: :cascade do |t|
-    t.datetime "started_at"
-    t.datetime "ended_at"
-    t.integer "total_seconds"
-    t.integer "target_price"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.decimal "target_hours", precision: 8, scale: 2
-    t.bigint "user_id", null: false
-    t.index ["user_id"], name: "index_sessions_on_user_id", unique: true
-  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -48,6 +36,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_07_070230) do
     t.index ["session_id"], name: "index_work_intervals_on_session_id"
   end
 
-  add_foreign_key "sessions", "users"
-  add_foreign_key "work_intervals", "sessions"
+  create_table "work_sessions", force: :cascade do |t|
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.integer "total_seconds"
+    t.integer "target_price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.decimal "target_hours", precision: 8, scale: 2
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_work_sessions_on_user_id", unique: true
+  end
+
+  add_foreign_key "work_intervals", "work_sessions", column: "session_id"
+  add_foreign_key "work_sessions", "users"
 end
