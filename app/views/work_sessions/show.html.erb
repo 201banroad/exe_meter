@@ -11,17 +11,17 @@
 <h2>目標の入力</h2>
 
 
-<%= form_with model: @session, url: update_target_session_path, method: :patch, local: true do |f| %>
+<%= form_with model: @work_session, url: update_target_work_session_path, method: :patch, local: true do |f| %>
 
     <label>目標金額(¥)</label>
     <%= f.number_field :target_price, step: 1 %>
-    <% @session.errors.full_messages_for(:target_price).each do |msg| %>
+    <% @work_session.errors.full_messages_for(:target_price).each do |msg| %>
         <%= msg %>
     <% end %>
 
     <label>目標時間(h)</label>
     <%= f.number_field :target_hours, step: 0.5 %>
-    <% @session.errors.full_messages_for(:target_hours).each do |msg| %>
+    <% @work_session.errors.full_messages_for(:target_hours).each do |msg| %>
         <%= msg %>
     <% end %>
 
@@ -38,14 +38,14 @@
 
 <div
   data-controller="tiny-timer"
-  data-tiny-timer-initial-seconds-value="<%= @session.live_seconds %>"
-  data-tiny-timer-running-value="<%= @session.running? %>">
+  data-tiny-timer-initial-seconds-value="<%= @work_session.live_seconds %>"
+  data-tiny-timer-running-value="<%= @work_session.running? %>">
   <span data-tiny-timer-target="elapsed">00:00:00</span>
 </div>
 
 
 <%= link_to "Start",
-            start_session_path,
+            start_work_session_path,
             data: {
               turbo_method: :post,
               action: "click->tiny-timer#handleStartClick",
@@ -55,7 +55,7 @@
             class: "btn start" %>
 
 <%= link_to "Stop",
-            stop_session_path,
+            stop_work_session_path,
             data: {
               turbo_method: :post,
               action: "click->tiny-timer#handleStopClick",
@@ -64,7 +64,7 @@
             class: "btn stop" %>
 
 <%= link_to "タイマーReset",
-            reset_session_path,
+            reset_work_session_path,
             data: {
                 turbo_method: :post,
                 turbo_confirm: "本当にリセットしますか？（合計時間が0に戻ります）",
@@ -76,11 +76,11 @@
     <% end %>
 
 <h2>タイマー編集</h2>
-<%= form_with url: update_time_session_path, method: :patch, local: true do %>
+<%= form_with url: update_time_work_session_path, method: :patch, local: true do %>
 
     <label for="manual_time">HH:MM:SS</label>
 
-    <%= text_field_tag "session[manual_time]", nil,
+    <%= text_field_tag "work_session[manual_time]", nil,
         placeholder: "01:30:00",
         pattern: "\\d{1,2}:\\d{2}:\\d{2}",
         inputmode: "numeric" %>
@@ -89,8 +89,8 @@
 <% end %>
 
 <h2>詳細</h2>
-<p>１時間で稼げる額: ¥<%= @session.hour_price.round %></p>
-<p>現在の市場価値: ¥<%= @session.now_price.round %></p>
+<p>１時間で稼げる額: ¥<%= @work_session.hour_price.round %></p>
+<p>現在の市場価値: ¥<%= @work_session.now_price.round %></p>
 
 
 
@@ -98,10 +98,10 @@
 <!-- app/views/sessions/show.html.erb の見やすい位置に追記 -->
 <section class="today-summary">
   <h2>今日の達成（24時リセット）</h2>
-  <p>1日の合計時間：<strong><%= format_duration(@session.today_total_seconds) %></strong></p>
+  <p>1日の合計時間：<strong><%= format_duration(@work_session.today_total_seconds) %></strong></p>
   <p>1日で稼いだ価値： 
     <strong>
-      <%= number_to_currency(@session.hour_price * (@session.today_total_seconds / 3600.0), unit: "¥", precision: 0) %>
+      <%= number_to_currency(@work_session.hour_price * (@work_session.today_total_seconds / 3600.0), unit: "¥", precision: 0) %>
     </strong>
   </p>
 </section>

@@ -1,3 +1,3 @@
 class WorkInterval < ApplicationRecord
-  belongs_to :session
+  belongs_to :work_session
 end

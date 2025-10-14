@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_13_091129) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_13_103732) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -27,13 +27,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_13_091129) do
   end
 
   create_table "work_intervals", force: :cascade do |t|
-    t.bigint "session_id", null: false
+    t.bigint "work_session_id", null: false
     t.datetime "started_at"
     t.datetime "ended_at"
     t.integer "duration_sec"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["session_id"], name: "index_work_intervals_on_session_id"
+    t.index ["work_session_id"], name: "index_work_intervals_on_work_session_id"
   end
 
   create_table "work_sessions", force: :cascade do |t|
@@ -48,6 +48,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_13_091129) do
     t.index ["user_id"], name: "index_work_sessions_on_user_id", unique: true
   end
 
-  add_foreign_key "work_intervals", "work_sessions", column: "session_id"
+  add_foreign_key "work_intervals", "work_sessions"
+  add_foreign_key "work_intervals", "work_sessions"
   add_foreign_key "work_sessions", "users"
 end
