@@ -61,7 +61,7 @@ class WorkSessionsController < ApplicationController
     end
   end
 
-  def update_time
+  def update_time #書き換える前
     if @work_session.running?
       redirect_to root_path, alert: 'タイマー進行中は更新できません' and return
     end
@@ -92,6 +92,19 @@ class WorkSessionsController < ApplicationController
 
   end
 
+
+  def update_time
+    if @work_session.running?
+      redirect_to root_path, alert: 'タイマー進行中は更新できません' and return
+    end
+
+    @work_session.update_manual_time!(params.dig(:work_session, :manual_time))
+    redirect_to root_path, notice: '手動時間を更新しました'
+
+    rescue ActiveRecord::RecordInvalid
+      flash[:alert] = @work_session.errors.full_messages.join(',')
+      redirect_to root_path
+  end
 
     private
 

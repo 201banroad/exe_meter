@@ -62,6 +62,35 @@ class WorkSession < ApplicationRecord
         end
     end
 
+
+    #ここにコントローラにあったバリデーションやロジックを移行
+
+    def update_manual_time(manual_time_str)
+        manual_time_str = manual_time_str.to_s.strip
+
+        if manual_time_str.blank?
+            errors.add(:manual_time, "を入力してください")
+            raise  ActiveRecord::RecordInvalid, self
+        end
+
+        unless /\A\d{1,2}:\d{2}:\d{2}\z/.match?(manual_time_str)
+            errors.add(:manual_time, "の形式が正しくありません（例: 01:30:00）")
+            raise ActiveRecord::RecordInvalid, self
+        end
+
+        hh, mm, ss = manual_time_str.split(':').map(&:to_i)
+
+        unless (0..59).cover?(mm) && (0..59).cover?(ss)
+            errors.add(:manual_time,  'の分・秒は 00〜59 の範囲で入力してください')
+            raise ActiveRecord::RecordInvalid, self
+        end
+
+        manual_seconds = hh * 3600 + mm * 60 + ss
+
+        update!(total_seconds: manual_seconds, started_at: nil, ended_at: nil)
+    end
+
+
         
 
 end
