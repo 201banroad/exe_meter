@@ -65,12 +65,12 @@ class WorkSession < ApplicationRecord
 
     #ここにコントローラにあったバリデーションやロジックを移行
 
-    def update_manual_time(manual_time_str)
+    def update_manual_time(manual_time_str) #バリデーションと更新をやってる
         manual_time_str = manual_time_str.to_s.strip
 
         if manual_time_str.blank?
             errors.add(:manual_time, "を入力してください")
-            raise  ActiveRecord::RecordInvalid, self
+            raise ActiveRecord::RecordInvalid, self
         end
 
         unless /\A\d{1,2}:\d{2}:\d{2}\z/.match?(manual_time_str)

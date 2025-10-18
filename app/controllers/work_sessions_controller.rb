@@ -6,7 +6,7 @@ class WorkSessionsController < ApplicationController
   end
 
   def update_target
-    if @work_session.update(params.require(:session).permit(:target_price, :target_hours))
+    if @work_session.update(params.require(:work_session).permit(:target_price, :target_hours))
       redirect_to root_path, notice: '目標を更新しました'
     else
       render :show, status: :unprocessable_entity
@@ -61,38 +61,6 @@ class WorkSessionsController < ApplicationController
     end
   end
 
-  def update_time #書き換える前
-    if @work_session.running?
-      redirect_to root_path, alert: 'タイマー進行中は更新できません' and return
-    end
-
-    str = params.dig(:work_session, :manual_time).to_s.strip
-
-    if str.blank?
-      redirect_to root_path, alert: '時間を入力してください（HH:MM:SS）' and return
-    end
-
-    unless /\A\d{1,2}:\d{2}:\d{2}\z/.match?(str)
-      redirect_to root_path, alert: '時間の形式が正しくありません（例: 01:30:00）' and return
-    end
-
-    hh, mm, ss = str.split(":").map(&:to_i)
-    unless (0 <= mm && mm < 60) && (0 <= ss && ss < 60)
-      redirect_to root_path, alert: '時間の形式が正しくありません（例: 01:30:00）' and return
-    end
-
-    manual_seconds = hh * 3600 + mm * 60 + ss
-
-    if @work_session.update(total_seconds: manual_seconds, started_at: nil, ended_at: nil)
-      redirect_to root_path, notice: "更新に成功しました"
-    else
-      redirect_to root_path, alert: "更新に失敗しました"
-    end
-
-
-  end
-
-
   def update_time
     if @work_session.running?
       redirect_to root_path, alert: 'タイマー進行中は更新できません' and return
@@ -101,9 +69,9 @@ class WorkSessionsController < ApplicationController
     @work_session.update_manual_time!(params.dig(:work_session, :manual_time))
     redirect_to root_path, notice: '手動時間を更新しました'
 
-    rescue ActiveRecord::RecordInvalid
-      flash[:alert] = @work_session.errors.full_messages.join(',')
-      redirect_to root_path
+    rescue ActiveRecord::RecordInvalid => e
+      flash[:alert] = e.record.errors.full_messages.to_sentence
+      redirect_to root_path, status: :unprocessable_entity
   end
 
     private
