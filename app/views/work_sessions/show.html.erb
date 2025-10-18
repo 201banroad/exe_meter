@@ -82,7 +82,7 @@
 
     <%= text_field_tag "work_session[manual_time]", nil,
         placeholder: "01:30:00",
-        pattern: "\\d{1,2}:\\d{2}:\\d{2}",
+        pattern: "\\d{1,}:\\d{2}:\\d{2}",
         inputmode: "numeric" %>
 
     <%= submit_tag "時間を更新" %>

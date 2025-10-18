@@ -65,7 +65,7 @@ class WorkSession < ApplicationRecord
 
     #ここにコントローラにあったバリデーションやロジックを移行
 
-    def update_manual_time(manual_time_str) #バリデーションと更新をやってる
+    def update_manual_time!(manual_time_str) #バリデーションと更新をやってる
         manual_time_str = manual_time_str.to_s.strip
 
         if manual_time_str.blank?
@@ -73,7 +73,7 @@ class WorkSession < ApplicationRecord
             raise ActiveRecord::RecordInvalid, self
         end
 
-        unless /\A\d{1,2}:\d{2}:\d{2}\z/.match?(manual_time_str)
+        unless /\A\d{1,}:\d{2}:\d{2}\z/.match?(manual_time_str)
             errors.add(:manual_time, "の形式が正しくありません（例: 01:30:00）")
             raise ActiveRecord::RecordInvalid, self
         end
