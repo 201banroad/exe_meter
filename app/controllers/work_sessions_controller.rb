@@ -70,9 +70,10 @@ class WorkSessionsController < ApplicationController
     redirect_to root_path, notice: '手動時間を更新しました'
 
     rescue ActiveRecord::RecordInvalid => e
-      flash[:alert] = e.record.errors.full_messages.to_sentence
-      redirect_to root_path, status: :unprocessable_entity
-  end
+      flash.now[:alert] = e.record.errors.full_messages.to_sentence
+      flash.discard(:notice) #前に表示されてたリセットしました等を消す
+      render :show, status: :unprocessable_entity
+    end
 
     private
 

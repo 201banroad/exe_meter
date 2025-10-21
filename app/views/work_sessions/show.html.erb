@@ -71,12 +71,12 @@
                 action: "click->tiny-timer#stop"
             },
             class: "btn reset" %>
-            <% if notice.present? %>
-    <p class="notice"><%= notice %></p>
+            <% if flash[:notice].present? %>
+    <p class="notice"><%= flash[:notice] %></p>
     <% end %>
 
 <h2>タイマー編集</h2>
-<%= form_with url: update_time_work_session_path, method: :patch, local: true do %>
+<%= form_with url: update_time_work_session_path, method: :patch, html: { novalidate: true }, local: true do %>
 
     <label for="manual_time">HH:MM:SS</label>
 
@@ -86,6 +86,10 @@
         inputmode: "numeric" %>
 
     <%= submit_tag "時間を更新" %>
+<% end %>
+
+<% if flash[:alert] %>
+  <div class= "alert"><%= flash[:alert] %></div>
 <% end %>
 
 <h2>詳細</h2>
