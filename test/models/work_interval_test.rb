@@ -1,7 +1,6 @@
 require "test_helper"
 
 class WorkIntervalTest < ActiveSupport::TestCase
-
     test "duration_sec is calculated correctly when ended_at is present" do
         start_time = Time.zone.now
         end_time   = start_time + 120
@@ -17,7 +16,7 @@ class WorkIntervalTest < ActiveSupport::TestCase
 
     test "duration_sec is nil when ended_at is nil (running)" do
         start_time = Time.zone.now
-   
+
         interval = WorkInterval.new(
             session: Session.new(total_seconds: 0, target_price: 0, target_hours: 0),
             started_at: start_time,
@@ -26,10 +25,4 @@ class WorkIntervalTest < ActiveSupport::TestCase
         )
         assert_nil interval.duration_sec
     end
-
-
-
-
-
 end
-

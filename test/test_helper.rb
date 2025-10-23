@@ -3,7 +3,7 @@ ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
 
-class ActiveSupport::TestCase #こっちはモデル
+class ActiveSupport::TestCase # こっちはモデル
   # 並列実行（必要なら）
   parallelize(workers: :number_of_processors)
 
@@ -22,7 +22,7 @@ class ActiveSupport::TestCase #こっちはモデル
   end
 end
 
-class ActionDispatch::IntegrationTest #こっちはコントローラ、ルーティング
+class ActionDispatch::IntegrationTest # こっちはコントローラ、ルーティング
   # IntegrationTest は ActiveSupport::TestCase を継承しないので、
   # 同じメソッドが必要ならこちらにも定義する
   def build_session(attrs = {})

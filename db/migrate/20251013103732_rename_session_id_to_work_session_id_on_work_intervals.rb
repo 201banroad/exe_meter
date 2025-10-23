@@ -12,7 +12,5 @@ class RenameSessionIdToWorkSessionIdOnWorkIntervals < ActiveRecord::Migration[8.
     if index_name_exists?(:work_intervals, 'index_work_intervals_on_session_id')
       rename_index :work_intervals, 'index_work_intervals_on_session_id', 'index_work_intervals_on_work_session_id'
     end
-
   end
-
 end

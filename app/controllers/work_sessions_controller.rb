@@ -7,7 +7,7 @@ class WorkSessionsController < ApplicationController
 
   def update_target
     if @work_session.update(params.require(:work_session).permit(:target_price, :target_hours))
-      redirect_to root_path, notice: '目標を更新しました'
+      redirect_to root_path, notice: "目標を更新しました"
     else
       render :show, status: :unprocessable_entity
     end
@@ -24,7 +24,7 @@ class WorkSessionsController < ApplicationController
           wi.started_at = now
         end
       end
-      redirect_to root_path, notice: '計測を開始しました'
+      redirect_to root_path, notice: "計測を開始しました"
     end
 
 
@@ -46,7 +46,7 @@ class WorkSessionsController < ApplicationController
       # セッションの停止と累積秒の更新
       @work_session.update!(ended_at: now, total_seconds: @work_session.persisted_seconds + gain)
     end
-    redirect_to root_path, notice: '計測を停止しました'
+    redirect_to root_path, notice: "計測を停止しました"
   end
 
 
@@ -55,31 +55,29 @@ class WorkSessionsController < ApplicationController
     @work_session.work_intervals.where(ended_at: nil).delete_all
 
     if @work_session.update(total_seconds: 0, started_at: nil, ended_at: nil)
-      redirect_to root_path, notice: 'リセットしました'
+      redirect_to root_path, notice: "リセットしました"
     else
-      redirect_to root_path, alert: 'リセットに失敗しました'
+      redirect_to root_path, alert: "リセットに失敗しました"
     end
   end
 
   def update_time
     if @work_session.running?
-      redirect_to root_path, alert: 'タイマー進行中は更新できません' and return
+      redirect_to root_path, alert: "タイマー進行中は更新できません" and return
     end
 
     @work_session.update_manual_time!(params.dig(:work_session, :manual_time))
-    redirect_to root_path, notice: '手動時間を更新しました'
+    redirect_to root_path, notice: "手動時間を更新しました"
 
     rescue ActiveRecord::RecordInvalid => e
       flash.now[:alert] = e.record.errors.full_messages.to_sentence
-      flash.discard(:notice) #前に表示されてたリセットしました等を消す
+      flash.discard(:notice) # 前に表示されてたリセットしました等を消す
       render :show, status: :unprocessable_entity
     end
 
     private
 
-    def load_session 
+    def load_session
       @work_session = current_user.work_session || current_user.create_work_session!(total_seconds: 0, target_price: 0, target_hours: 0)
     end
-
-
 end

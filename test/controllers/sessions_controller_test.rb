@@ -1,5 +1,5 @@
 require "test_helper"
-#ヘルパーにて、初期値を設定build_session（数字を与えてないカラムがNilになってしまうため）
+# ヘルパーにて、初期値を設定build_session（数字を与えてないカラムがNilになってしまうため）
 class SessionsControllerTest < ActionDispatch::IntegrationTest
     include ActiveSupport::Testing::TimeHelpers
 
@@ -12,7 +12,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
         assert_response :success
     end
 
-    test "start test" do 
+    test "start test" do
         session = build_session(total_seconds: 0, target_price: 0, target_hours: 0)
         post start_session_path
         session.reload
@@ -36,15 +36,14 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
                 travel 2.seconds
                 post stop_session_path
                 session.reload
-                assert_equal 12, session.total_seconds  
+                assert_equal 12, session.total_seconds
                 assert_not_nil session.ended_at
                 assert_redirected_to root_path
-              
             end
     end
 
 
-    test "end test when dont running" do #走ってない時にストップ押しても無害テスト
+    test "end test when dont running" do # 走ってない時にストップ押しても無害テスト
         session = build_session(total_seconds: 10, started_at: nil, ended_at: nil)
 
         assert_no_changes -> { session.reload.total_seconds } do
@@ -58,10 +57,10 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     end
 
 
-    test "start test when running" do #走ってる時にスタート押しても無害テスト
+    test "start test when running" do # 走ってる時にスタート押しても無害テスト
         base_time = Time.current.change(usec: 0)
         session = build_session(total_seconds: 0, started_at: base_time, ended_at: nil)
-        assert_no_changes -> {session.reload.started_at } do
+        assert_no_changes -> { session.reload.started_at } do
             post start_session_path
         end
         session.reload
@@ -70,7 +69,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
         assert_redirected_to root_path
     end
 
-    test "stop twice while running: second is no-op" do #走ってる時にストップを二回押しても不変テスト
+    test "stop twice while running: second is no-op" do # 走ってる時にストップを二回押しても不変テスト
         base_time = Time.current.change(usec: 0)
         session = build_session(total_seconds: 10, started_at: base_time, ended_at: nil)
 
@@ -177,7 +176,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
         assert_equal "リセットしました", flash[:notice]
     end
 
-    test "reset clears past completed session and zeroes total_seconds" do #履歴のセッションに対してもリセットできるか
+    test "reset clears past completed session and zeroes total_seconds" do # 履歴のセッションに対してもリセットできるか
         session = build_session(total_seconds: 100, started_at: 1.hour.ago, ended_at: 30.minutes.ago)
 
         post reset_session_path
@@ -211,12 +210,4 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
         assert_redirected_to root_path
         assert_equal "リセットしました", flash[:notice]
     end
-
-
-
-    
-
-
-
 end
-
