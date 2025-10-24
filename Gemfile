@@ -65,6 +65,7 @@ end
 gem "pg", "~> 1.6"
 
 group :development, :test do
-  gem 'rspec-rails'
+  gem "rspec-rails"
 end
 
+gem "devise"
