@@ -8,9 +8,9 @@ body {
 }
 
 .container {
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 16px;              /* モバイルは余白控えめ */
+  /* max-width: 100%; */
+  /* margin: 0 ; */
+  padding: 16px;             /* モバイルは余白控えめ */
 }
 
 .header {
@@ -54,6 +54,13 @@ body {
   font-weight: 600;
   margin: 0 0 12px;
 }
+
+.border-line{
+  border-top: 1px solid #e5e7eb;
+  margin-top: 16px;
+  padding-top: 16px;
+}
+
 
 .field { margin-bottom: 12px; }
 
@@ -105,7 +112,7 @@ body {
 }
 .kv strong { font-weight: 600; }
 
-/* === Larger screens (tablet+) === */
+/* === Larger screens (tablet+) ============================================== */
 @media (min-width: 768px) {
   .container {
     max-width: 720px;

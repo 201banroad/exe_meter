@@ -1,17 +1,10 @@
 <main class="container">
   <header class="header">
     <h1>市場価値メーター</h1>
-    <% if user_signed_in? %>
       <div class="user-info">
         <span><%= current_user.email %></span>
         <%= link_to "ログアウト", destroy_user_session_path, data: { turbo_method: :delete }, class: "link" %>
       </div>
-    <% else %>
-      <div class="user-info">
-        <%= link_to "ログイン", new_user_session_path, class: "link" %>
-        <%= link_to "新規登録", new_user_registration_path, class: "link" %>
-      </div>
-    <% end %>
   </header>
 
   <section class="card">
@@ -78,8 +71,20 @@
   </section>
 
 
+
+
   <section class="card">
-    <h2>今日のサマリー</h2>
+    <h2>詳細</h2>
+    <p class="kv">
+      <span>現在の市場価値</span> 
+      <strong>¥<%= @work_session.now_price.round %></strong>
+    </p>
+    <p class="kv">
+      <span>１時間で稼げる額</span>
+      <strong>¥<%= @work_session.hour_price.round %></strong>
+    </p>
+    
+    <h2 class="border-line">今日のサマリー</h2>
     <p class="kv">
       <span>今日の合計時間</span>
       <strong><%= format_duration(@work_session.today_total_seconds) %></strong>
