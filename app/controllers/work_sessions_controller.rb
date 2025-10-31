@@ -9,6 +9,7 @@ class WorkSessionsController < ApplicationController
     if @work_session.update(params.require(:work_session).permit(:target_price, :target_hours))
       redirect_to root_path, notice: "目標を更新しました"
     else
+      flash.now[:alert] = "失敗しました"
       render :show, status: :unprocessable_entity
     end
   end

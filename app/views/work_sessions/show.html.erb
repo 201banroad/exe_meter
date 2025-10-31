@@ -19,9 +19,17 @@
         <label>目標時間(h)</label>
         <%= f.number_field :target_hours, step: 0.5, class: "input" %>
       </div>
+      <%@work_session.errors.full_messages_for(:target_hours).each do |msg|%>
+        <%= msg %>
+      <% end %>
+
 
       <%= f.submit "変更", class: "btn btn-primary" %>
     <% end %>
+    <% if flash[:alert].present? %>
+      <p class= "alert"><%= flash[:alert] %></p>
+    <% end %>
+
   </section>
 
   <section class="card">
