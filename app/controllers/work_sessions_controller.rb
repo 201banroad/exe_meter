@@ -9,24 +9,23 @@ class WorkSessionsController < ApplicationController
     if @work_session.update(params.require(:work_session).permit(:target_price, :target_hours))
       redirect_to root_path, notice: "目標を更新しました"
     else
-      flash.now[:alert] = "失敗しました"
       render :show, status: :unprocessable_entity
     end
   end
 
 
-    def start
-      unless @work_session.running?
-        now = Time.current
-        @work_session.update!(started_at: now, ended_at: nil)
+  def start
+    unless @work_session.running?
+      now = Time.current
+      @work_session.update!(started_at: now, ended_at: nil)
 
-        # 進行中の WorkIntervalがもしすでにある場合はそれを使う（基本的にはありえないがもしものため）
-        @work_session.work_intervals.find_or_create_by!(ended_at: nil) do |wi|
-          wi.started_at = now
-        end
+      # 進行中の WorkIntervalがもしすでにある場合はそれを使う（途中で中断された時などもしものため）
+      @work_session.work_intervals.find_or_create_by!(ended_at: nil) do |wi|
+        wi.started_at = now
       end
-      redirect_to root_path, notice: "計測を開始しました"
     end
+    redirect_to root_path, notice: "計測を開始しました"
+  end
 
 
 
@@ -65,16 +64,18 @@ class WorkSessionsController < ApplicationController
   def update_time
     if @work_session.running?
       redirect_to root_path, alert: "タイマー進行中は更新できません" and return
-    end
+    end #ここをアラートだと上に来て見づらいからエラーメッセージにしたい
 
     @work_session.update_manual_time!(params.dig(:work_session, :manual_time))
     redirect_to root_path, notice: "手動時間を更新しました"
 
     rescue ActiveRecord::RecordInvalid => e
-      flash.now[:alert] = e.record.errors.full_messages.to_sentence
+      # flash.now[:alert] = e.record.errors.full_messages.to_sentence
+      @work_session = e.record
       flash.discard(:notice) # 前に表示されてたリセットしました等を消す
       render :show, status: :unprocessable_entity
     end
+  
 
     private
 

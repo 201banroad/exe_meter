@@ -1,4 +1,13 @@
 <main class="container">
+
+    <% if flash[:alert].present? %>
+      <p class= "alert"><%= flash[:alert] %></p>
+    <% end %>
+
+    <% if flash[:notice].present? %>
+      <p class= "notice"><%= flash[:notice] %></p>
+    <% end %>
+
   <header class="header">
     <h1>市場価値メーター</h1>
       <div class="user-info">
@@ -13,22 +22,22 @@
       <div class="field">
         <label>目標金額(¥)</label>
         <%= f.number_field :target_price, step: 1, class: "input" %>
+        <%@work_session.errors.full_messages_for(:target_price).each do |msg|%>
+          <%= msg %>
+        <% end %>
       </div>
 
       <div class="field">
         <label>目標時間(h)</label>
         <%= f.number_field :target_hours, step: 0.5, class: "input" %>
+        <%@work_session.errors.full_messages_for(:target_hours).each do |msg|%>
+          <%= msg %>
+        <% end %>
       </div>
-      <%@work_session.errors.full_messages_for(:target_hours).each do |msg|%>
-        <%= msg %>
-      <% end %>
-
-
+      
       <%= f.submit "変更", class: "btn btn-primary" %>
     <% end %>
-    <% if flash[:alert].present? %>
-      <p class= "alert"><%= flash[:alert] %></p>
-    <% end %>
+
 
   </section>
 
@@ -55,27 +64,28 @@
                   local: true,
                   html: { novalidate: true, class: "manual-form" } do %>
 
-      <label for="manual_time">HH:MM:SS</label>
+      <label for="manual_time"></label>
       <%= text_field_tag "work_session[manual_time]",
           nil,
           placeholder: "01:30:00",
           pattern: "\\d{1,2}:\\d{2}:\\d{2}",
           inputmode: "numeric",
-          class: "input",
-          disabled: @work_session.running? %>
+          class: "input" %>
 
-      <p class="muted" style="margin:8px 0 12px;">
-        <% if @work_session.running? %>
-          タイマー稼働中は編集できません。Stopしてください。
-        <% else %>
-          例: 1時間30分は <code>01:30:00</code>
-        <% end %>
-      </p>
+  
 
-      <%= submit_tag "時間を更新",
-          class: "btn btn-secondary",
-          disabled: @work_session.running? %>
+        <%= submit_tag "時間を更新",
+          class: "btn btn-secondary"%>
     <% end %>
+
+    <% if @work_session.errors.any? %>
+      <ul>
+        <% @work_session.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    <% end %>
+
   </section>
 
 

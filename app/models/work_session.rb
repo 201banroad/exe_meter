@@ -62,9 +62,9 @@ class WorkSession < ApplicationRecord
     end
 
 
-    # ここにコントローラにあったバリデーションやロジックを移行
-
-    def update_manual_time!(manual_time_str) # バリデーションと更新をやってる
+# ここにコントローラにあったロジックやバリデーションを移行
+# 擬似的にバリデーションと更新をやってる（DBのカラムを作るんじゃなくて、一時的な入力値を弾きたいだけなのでバリデーションは使わず書いている）
+    def update_manual_time!(manual_time_str) 
         manual_time_str = manual_time_str.to_s.strip
 
         if manual_time_str.blank?
