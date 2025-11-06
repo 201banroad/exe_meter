@@ -64,7 +64,7 @@ class WorkSessionsController < ApplicationController
   def update_time
     if @work_session.running?
       redirect_to root_path, alert: "タイマー進行中は更新できません" and return
-    end #ここをアラートだと上に来て見づらいからエラーメッセージにしたい
+    end 
 
     @work_session.update_manual_time!(params.dig(:work_session, :manual_time))
     redirect_to root_path, notice: "手動時間を更新しました"
@@ -74,12 +74,11 @@ class WorkSessionsController < ApplicationController
       @work_session = e.record
       flash.discard(:notice) # 前に表示されてたリセットしました等を消す
       render :show, status: :unprocessable_entity
-    end
-  
+  end
 
-    private
+  private
 
-    def load_session
-      @work_session = current_user.work_session || current_user.create_work_session!(total_seconds: 0, target_price: 0, target_hours: 0)
-    end
+  def load_session
+    @work_session = current_user.work_session || current_user.create_work_session!(total_seconds: 0, target_price: 0, target_hours: 0)
+  end
 end
