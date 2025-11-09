@@ -18,7 +18,10 @@
 
   <section class="card">
     <h2>目標設定</h2>
-    <%= form_with model: @work_session, url: update_target_work_session_path, method: :patch, local: true do |f| %>
+    <%= form_with model: @work_session, 
+                  url: update_target_work_session_path, 
+                  method: :patch, 
+                  local: true do |f| %>
       <div class="field">
         <label>目標金額(¥)</label>
         <%= f.number_field :target_price, step: 1, class: "input" %>

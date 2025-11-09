@@ -93,8 +93,9 @@ body {
 .field { margin-bottom: 12px; }
 
 .input {
+  box-sizing: border-box;  
   width: 100%;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   font-size: 15px;
@@ -102,6 +103,7 @@ body {
 
 /* ボタンはモバイルで“縦積み・幅100%”に */
 .btn {
+  box-sizing: border-box;
   display: block;
   width: 100%;
   padding: 12px 14px;

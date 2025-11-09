@@ -19,7 +19,7 @@ class WorkSessionsController < ApplicationController
       now = Time.current
       @work_session.update!(started_at: now, ended_at: nil)
 
-      # 進行中の WorkIntervalがもしすでにある場合はそれを使う（途中で中断された時などもしものため）
+      # 新しいWorkIntervalを作り、進行中のWorkIntervalがもしある場合はそれを使う（途中で中断された時などもしものため）
       @work_session.work_intervals.find_or_create_by!(ended_at: nil) do |wi|
         wi.started_at = now
       end
@@ -27,12 +27,9 @@ class WorkSessionsController < ApplicationController
     redirect_to root_path, notice: "計測を開始しました"
   end
 
-
-
   def stop
     if @work_session.running?
       now = Time.current
-
       wi = @work_session.work_intervals.find_by(ended_at: nil)
 
       if wi
@@ -78,7 +75,8 @@ class WorkSessionsController < ApplicationController
 
   private
 
-  def load_session
-    @work_session = current_user.work_session || current_user.create_work_session!(total_seconds: 0, target_price: 0, target_hours: 0)
+  def load_session 
+    @work_session = current_user.work_session || current_user.create_work_session!(total_seconds: 0, target_price: 0, target_hours: 0) #初期値だとnilが入り。バリデーションや、ロジックの時に困るので明示的に０を渡す
   end
 end
+
