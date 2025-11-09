@@ -142,6 +142,27 @@ body {
 }
 .kv strong { font-weight: 600; }
 
+
+.now-price {
+  text-align: center;
+  padding: 14px 6px;
+  margin: 20px 0;
+}
+
+.now-price span {
+  font-size: 17px;
+  font-weight: 60;
+  letter-spacing: 0.5px;
+}
+
+.now-price strong {
+  display: block;
+  font-size: 40px;
+  font-weight: 8;
+  margin-top: 8px;
+}
+
+
 /* === Larger screens (tablet+) ============================================== */
 @media (min-width: 768px) {
   .container {
