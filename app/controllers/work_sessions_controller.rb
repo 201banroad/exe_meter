@@ -9,6 +9,7 @@ class WorkSessionsController < ApplicationController
     if @work_session.update(params.require(:work_session).permit(:target_price, :target_hours))
       redirect_to root_path, notice: "目標を更新しました"
     else
+      flash.now[:alert] = "目標の更新に失敗しました"
       render :show, status: :unprocessable_entity
     end
   end
@@ -64,12 +65,13 @@ class WorkSessionsController < ApplicationController
     end 
 
     @work_session.update_manual_time!(params.dig(:work_session, :manual_time))
-    redirect_to root_path, notice: "手動時間を更新しました"
+    redirect_to root_path, notice: "手動で時間を更新しました"
 
     rescue ActiveRecord::RecordInvalid => e
       # flash.now[:alert] = e.record.errors.full_messages.to_sentence
       @work_session = e.record
       flash.discard(:notice) # 前に表示されてたリセットしました等を消す
+      flash.now[:alert] = "時間更新に失敗しました"
       render :show, status: :unprocessable_entity
   end
 

@@ -73,9 +73,13 @@
       <div class="field">
         <label>目標時間(h)</label>
         <%= f.number_field :target_hours, step: 0.5, class: "input" %>
-        <%@work_session.errors.full_messages_for(:target_hours).each do |msg|%>
-          <%= msg %>
-        <% end %>
+
+        <ul>
+          <%@work_session.errors.full_messages_for(:target_hours).each do |msg|%>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+
       </div>
       
       <%= f.submit "変更", class: "btn btn-primary" %>
@@ -105,7 +109,7 @@
     <% end %>
 
       <ul>
-        <% @work_session.errors.full_messages.each do |msg| %>
+        <% @work_session.errors.full_messages_for(:manual_time).each do |msg| %>
           <li><%= msg %></li>
         <% end %>
       </ul>
