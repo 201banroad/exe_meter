@@ -17,8 +17,8 @@ Rails.application.routes.draw do
   resource :work_session, only: [ :show ] do
     patch :update_target  # 目標金額/時間の更新
     patch :update_time
-    post  :start               # タイマースタート
-    post  :stop                # タイマーストップ
+    post  :start
+    post  :stop
     post  :reset
   end
 end
