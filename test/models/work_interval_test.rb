@@ -6,7 +6,7 @@ class WorkIntervalTest < ActiveSupport::TestCase
         end_time   = start_time + 120
 
         interval = WorkInterval.new(
-            session: Session.new(total_seconds: 0, target_price: 0, target_hours: 0),
+            work_session: WorkSession.new(total_seconds: 0, target_price: 0, target_hours: 0),
             started_at: start_time,
             ended_at: end_time,
             duration_sec: (end_time - start_time).to_i
@@ -18,7 +18,7 @@ class WorkIntervalTest < ActiveSupport::TestCase
         start_time = Time.zone.now
 
         interval = WorkInterval.new(
-            session: Session.new(total_seconds: 0, target_price: 0, target_hours: 0),
+            work_session: WorkSession.new(total_seconds: 0, target_price: 0, target_hours: 0),
             started_at: start_time,
             ended_at: nil,
             duration_sec: nil

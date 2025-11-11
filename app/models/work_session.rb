@@ -5,7 +5,7 @@ class WorkSession < ApplicationRecord
     belongs_to :user
 
     validates :target_price, numericality: { greater_than_or_equal_to: 0 }, presence: true
-    validates :target_hours, numericality: { greater_than_or_equal_to: 0 }, presence: true
+    validates :target_hours, numericality: { greater_than_or_equal_to: 0, less_than: 100_000 }, presence: true
 
     def running?   # セッションが進行中かどうか
         started_at.present? && ended_at.nil?
