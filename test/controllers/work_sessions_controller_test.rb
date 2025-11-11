@@ -2,6 +2,13 @@ require "test_helper"
 # ヘルパーにて、初期値を設定build_work_session（数字を与えてないカラムがNilになってしまうため）
 class WorkSessionsControllerTest < ActionDispatch::IntegrationTest
     include ActiveSupport::Testing::TimeHelpers
+    include Devise::Test::IntegrationHelpers
+
+    setup do
+        @user = User.create!(email: "test@example.com", password: "password")
+        sign_in @user
+        WorkSession.delete_all
+    end
 
     setup do
         WorkSession.delete_all
@@ -13,7 +20,8 @@ class WorkSessionsControllerTest < ActionDispatch::IntegrationTest
         assert_response :success
     end
 
-    test "start test" do
+    test "start test" do 
+#まずレコードをつくる。スタートアクションする。セッションリロードする。インターバルのレコード数える。二つともレコードのエンドがNilか確認。ルートにリダイレクト
         work_session = build_work_session(total_seconds: 0, target_price: 0, target_hours: 0)
         post start_work_session_path
         work_session.reload
