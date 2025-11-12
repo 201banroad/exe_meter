@@ -11,7 +11,7 @@ class WorkSession < ApplicationRecord
         started_at.present? && ended_at.nil?
     end
 
-    def persisted_seconds # すでにDBに保存されている合計秒数。total_seconds がnilのときは 0 を返す（エラー防止）
+    def persisted_seconds # 合計秒数。total_seconds がnilのときは 0 を返す（計算時のエラー防止）
         total_seconds || 0
     end
 
