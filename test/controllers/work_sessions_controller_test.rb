@@ -37,6 +37,7 @@ class WorkSessionsControllerTest < ActionDispatch::IntegrationTest
     end
 
     test "end test" do
+#まず秒未満の細かい数字を０に揃える。トータル秒が10のを作る。2秒進めて、ストップアクションする。リロードし、12秒になってるかを確認する。エンドがNILじゃないか。リダイレクト
         base_time = Time.current.change(usec: 0)
         work_session = build_work_session(total_seconds: 10, target_price: 0, target_hours: 0)
 
@@ -219,4 +220,32 @@ class WorkSessionsControllerTest < ActionDispatch::IntegrationTest
         assert_redirected_to root_path
         assert_equal "リセットしました", flash[:notice]
     end
+    
+    test "update_time updates total_seconds when valid manual_time given" do
+    work_session = build_work_session(total_seconds: 0)
+    patch update_time_work_session_path, params: { work_session: { manual_time: "01:30:00" } }
+    work_session.reload
+    assert_equal 5400, work_session.total_seconds
+    assert_redirected_to root_path
+    assert_equal "手動で時間を更新しました", flash[:notice]
+    end
+
+    test "update_time rejects invalid manual_time format" do
+    work_session = build_work_session(total_seconds: 0)
+    patch update_time_work_session_path, params: { work_session: { manual_time: "1:99:00" } }
+    assert_response :unprocessable_entity
+    assert_match "時間更新に失敗しました", flash[:alert]
+    end
+
+    test "update_time does not update when running" do
+    work_session = build_work_session(total_seconds: 100, started_at: Time.current, ended_at: nil)
+    patch update_time_work_session_path, params: { work_session: { manual_time: "01:00:00" } }
+    work_session.reload
+    assert_equal 100, work_session.total_seconds
+    assert_redirected_to root_path
+    assert_equal "タイマー進行中は更新できません", flash[:alert]
+    end
+
+
+
 end
