@@ -62,7 +62,7 @@ class WorkSessionsController < ApplicationController
   def update_time
     if @work_session.running?
       redirect_to root_path, alert: "タイマー進行中は更新できません" and return
-    end 
+    end
 
     @work_session.update_manual_time!(params.dig(:work_session, :manual_time))
     redirect_to root_path, notice: "手動で時間を更新しました"

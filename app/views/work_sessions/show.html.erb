@@ -111,11 +111,12 @@
             pattern: "\\d{1,}:\\d{2}:\\d{2}",
             inputmode: "numeric",
             class: "input" %>
-    </div>
 
-    <%= submit_tag "時間を更新",
-      class: "btn btn-secondary"%>
-    <% end %>
+        <%= submit_tag "時間を更新",
+        class: "btn btn-secondary"%>
+        
+      <% end %>
+    </div>
 
       <ul>
         <% @work_session.errors.full_messages_for(:manual_time).each do |msg| %>
