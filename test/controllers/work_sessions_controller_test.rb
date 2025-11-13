@@ -10,11 +10,18 @@ class WorkSessionsControllerTest < ActionDispatch::IntegrationTest
         WorkSession.delete_all
     end
 
+    test "requires login for work_session" do
+        sign_out @user
+        get work_session_path
+        assert_redirected_to new_user_session_path
+    end
+
 
     test "get work_session" do
         get work_session_path
         assert_response :success
     end
+
 
     test "start test" do 
 #まずレコードをつくる。スタートアクションする。セッションリロードする。インターバルのレコード数える。二つともレコードのエンドがNilか確認。ルートにリダイレクト
