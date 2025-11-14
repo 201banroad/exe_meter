@@ -27,5 +27,9 @@ module ExeMeter
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    config.generators do |g|
+      g.test_framework :test_unit, fixture: true  # Minitestを使う
+      # g.system_tests :test_unit  # システムテストもMinitestで書く場合は有効に
+    end
   end
 end

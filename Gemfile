@@ -65,11 +65,9 @@ end
 gem "pg", "~> 1.6"
 
 group :development, :test do
-  gem "rspec-rails"
 end
 
 gem "devise"
 
 # エラーメッセージを英文から自動で翻訳
 gem 'rails-i18n'
-

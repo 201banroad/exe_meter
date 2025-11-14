@@ -1,12 +1,10 @@
 require "test_helper"
 # ヘルパーにて、初期値を設定build_work_session（数字を与えてないカラムがNilになってしまうため）
 class WorkSessionsControllerTest < ActionDispatch::IntegrationTest
-    include ActiveSupport::Testing::TimeHelpers
-    include Devise::Test::IntegrationHelpers
-
+  include ActiveSupport::Testing::TimeHelpers
     setup do
-        @user = User.create!(email: "test@example.com", password: "password")
-        sign_in @user
+        @user = User.create!(email: "test@example.com", username: "tester", password: "password")
+        sign_in @user, scope: :user
         WorkSession.delete_all
     end
 
