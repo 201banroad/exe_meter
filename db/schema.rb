@@ -50,6 +50,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_10_052905) do
   end
 
   add_foreign_key "work_intervals", "work_sessions"
-  add_foreign_key "work_intervals", "work_sessions"
   add_foreign_key "work_sessions", "users"
 end
