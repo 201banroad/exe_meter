@@ -1,5 +1,4 @@
 require "test_helper"
-# ヘルパーにて、初期値を設定build_work_session（数字を与えてないカラムがNilになってしまうため）
 class WorkSessionsControllerTest < ActionDispatch::IntegrationTest
   include ActiveSupport::Testing::TimeHelpers
     setup do
@@ -8,11 +7,15 @@ class WorkSessionsControllerTest < ActionDispatch::IntegrationTest
         WorkSession.delete_all
     end
 
+  
+
+
     test "requires login for work_session" do
         sign_out @user
         get work_session_path
         assert_redirected_to new_user_session_path
     end
+    
 
 
     test "get work_session" do
@@ -22,7 +25,7 @@ class WorkSessionsControllerTest < ActionDispatch::IntegrationTest
 
 
     test "start test" do 
-#まずレコードをつくる。スタートアクションする。セッションリロードする。インターバルのレコード数える。二つともレコードのエンドがNilか確認。ルートにリダイレクト
+    #まずレコードをつくる。スタートアクションする。セッションリロードする。インターバルのレコード数える。二つともレコードのエンドがNilか確認。ルートにリダイレクト
         work_session = build_work_session(total_seconds: 0, target_price: 0, target_hours: 0)
         post start_work_session_path
         work_session.reload
@@ -38,7 +41,7 @@ class WorkSessionsControllerTest < ActionDispatch::IntegrationTest
     end
 
     test "end test" do
-#まず秒未満の細かい数字を０に揃える。トータル秒が10のを作る。2秒進めて、ストップアクションする。リロードし、12秒になってるかを確認する。エンドがNILじゃないか。リダイレクト
+    #まず秒未満の細かい数字を０に揃える。トータル秒が10のを作る。2秒進めて、ストップアクションする。リロードし、12秒になってるかを確認する。エンドがNILじゃないか。リダイレクト
         base_time = Time.current.change(usec: 0)
         work_session = build_work_session(total_seconds: 10, target_price: 0, target_hours: 0)
 
