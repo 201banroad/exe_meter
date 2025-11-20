@@ -70,4 +70,4 @@ end
 gem "devise"
 
 # エラーメッセージを英文から自動で翻訳
-gem 'rails-i18n'
+gem "rails-i18n"

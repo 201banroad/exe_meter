@@ -77,8 +77,7 @@ class WorkSessionsController < ApplicationController
 
   private
 
-  def load_session 
-    @work_session = current_user.work_session || current_user.create_work_session!(total_seconds: 0, target_price: 0, target_hours: 0) #初期値だとnilが入り。バリデーションや、ロジックの時に困るので明示的に０を渡す
+  def load_session
+    @work_session = current_user.work_session || current_user.create_work_session!(total_seconds: 0, target_price: 0, target_hours: 0) # 初期値だとnilが入り。バリデーションや、ロジックの時に困るので明示的に０を渡す
   end
 end
-

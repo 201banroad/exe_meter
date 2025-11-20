@@ -41,7 +41,7 @@ class WorkSessionTest < ActiveSupport::TestCase
     end
   end
 
-  test "hour_price returns 0 when target_hours is 0" do #0除算ガードのテスト
+  test "hour_price returns 0 when target_hours is 0" do # 0除算ガードのテスト
     work_session = WorkSession.new(user: @user, target_price: 1000, target_hours: 0)
     assert_equal 0, work_session.hour_price
   end
@@ -115,7 +115,7 @@ class WorkSessionTest < ActiveSupport::TestCase
     base_time = Time.current.change(usec: 0)
     travel_to(base_time) do
       work_session = WorkSession.new(
-        user: @user, 
+        user: @user,
         target_price: 1200,
         target_hours: 2,  # 時給 600
         total_seconds: 1800, # 0.5h
@@ -217,7 +217,4 @@ class WorkSessionTest < ActiveSupport::TestCase
     end
     assert ws.errors[:manual_time].present?
   end
-
-
-
 end
