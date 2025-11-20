@@ -92,8 +92,8 @@ jobs:
           bin/rails db:create
           bin/rails db:schema:load
 
-      - name: Run RSpec
-        run: bundle exec rspec
+      - name: Run tests
+        run: bin/rails test
 
       - name: Keep screenshots from failed system tests
         if: failure()
