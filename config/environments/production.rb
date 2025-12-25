@@ -25,10 +25,10 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
-  config.assume_ssl = true #Rails に「このリクエストは元々 HTTPS だよ」と教えるかどうか
+  config.assume_ssl = true # Rails に「このリクエストは元々 HTTPS だよ」と教えるかどうか
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = false #HTTP で来たリクエストを HTTPS に強制リダイレクトするかどうか、ALBでその設定してるならここはfalseでいい
+  config.force_ssl = false # HTTP で来たリクエストを HTTPS に強制リダイレクトするかどうか、ALBでその設定してるならここはfalseでいい
 
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
