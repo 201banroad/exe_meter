@@ -60,8 +60,7 @@ test:
 
 production:
   <<: *default
-  database: exp_meter_production
-  username: exp_meter_user
-  password: <%= ENV["DB_PASSWORD"] %>
   host: <%= ENV["DB_HOST"] %>
-  port: 5432
+  database: <%= ENV["DB_NAME"] %>
+  username: <%= ENV["DB_USER"] %>
+  password: <%= ENV["DB_PASSWORD"] %>
