@@ -22,7 +22,7 @@ jobs:
 
       - name: Deploy EC2-1A
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_INSTANCE_ID_1A }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_SSH_IP_1A }} << 'EOF'
             cd /var/www/exe_meter
             git pull origin main
             bundle install --without development test
@@ -32,7 +32,7 @@ jobs:
       
       - name: Deploy to EC2 1C
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_INSTANCE_ID_1C }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_SSH_IP_1C }} << 'EOF'
             cd /var/www/exe_meter
             git pull origin main
             bundle install --without development test
