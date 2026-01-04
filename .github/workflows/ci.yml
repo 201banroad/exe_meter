@@ -51,7 +51,7 @@ jobs:
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
-  test:   # ← インデントを修正（ここ重要）
+  test:   
     runs-on: ubuntu-latest
 
     services:

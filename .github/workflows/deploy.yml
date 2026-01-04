@@ -1,4 +1,4 @@
-name: Deploy via SSM (2 EC2)
+name: deploy 2 EC2
 
 on:
   push:
@@ -20,19 +20,23 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Deploy to EC2 (2 instances) via SSM
+      - name: Deploy EC2-1A
         run: |
-          aws ssm send-command \
-            --instance-ids \
-              "${{ secrets.EC2_INSTANCE_ID_1A }}" \
-              "${{ secrets.EC2_INSTANCE_ID_1C }}" \
-            --document-name "AWS-RunShellScript" \
-            --comment "Deploy Rails app to all EC2 instances" \
-            --parameters commands='[
-              "cd /var/www/exe_meter",
-              "git pull origin main",
-              "bundle install --without development test",
-              "RAILS_ENV=production rails db:migrate",
-              "systemctl restart puma"
-            ]'
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_INSTANCE_ID_1A }} << 'EOF'
+            cd /var/www/exe_meter
+            git pull origin main
+            bundle install --without development test
+            RAILS_ENV=production rails db:migrate
+            sudo systemctl restart puma
+          EOF
+      
+      - name: Deploy to EC2 1C
+        run: |
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_INSTANCE_ID_1C }} << 'EOF'
+            cd /var/www/exe_meter
+            git pull origin main
+            bundle install --without development test
+            RAILS_ENV=production rails db:migrate
+            sudo systemctl restart puma
+          EOF
 
