@@ -16,7 +16,7 @@ jobs:
       - name: setup ssh
         run: |
           mkdir -p ~/.ssh
-          echo "${{ EXE_METER_EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.EXE_METER_EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600  ~/.ssh/id_ed25519
 
       - name: Deploy EC2-1A
