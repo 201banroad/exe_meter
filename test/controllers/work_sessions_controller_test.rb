@@ -2,7 +2,7 @@ require "test_helper"
 class WorkSessionsControllerTest < ActionDispatch::IntegrationTest
   include ActiveSupport::Testing::TimeHelpers
     setup do
-        @user = User.create!(email: "test@example.com", username: "tester", password: "password")
+        @user = User.create!(email: "test@example.com", username: "tester", password: "password1")
         sign_in @user, scope: :user
         WorkSession.delete_all
     end
