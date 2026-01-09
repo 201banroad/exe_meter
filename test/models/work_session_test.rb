@@ -4,7 +4,7 @@ class WorkSessionTest < ActiveSupport::TestCase
   include ActiveSupport::Testing::TimeHelpers
 
   def setup
-    @user = User.create!(email: "model@example.com", username: "model_tester", password: "password")
+    @user = User.create!(email: "model@example.com", username: "model_tester", password: "password1")
   end
 
   test "running? returns true when started_at is set and ended_at is nil" do # つまりこの設定でちゃんとrunningと判定されるか
