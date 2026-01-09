@@ -9,7 +9,7 @@
     <% end %>
 
   <header class="header">
-    <h1>市場価値メーター</h1>
+    <h1>努力価値メーター</h1>
       <div class="user-info">
         <span><%= current_user.username %></span>
         <%= link_to "ログアウト", destroy_user_session_path, data: { turbo_method: :delete }, class: "link" %>
@@ -39,7 +39,7 @@
 
   <section class="card">
     <p class="now-price">
-      <span>現在の市場価値</span> 
+      <span>現在の価値</span> 
       <strong>¥<%= @work_session.now_price.round %></strong>
     </p>
   </section>
@@ -57,7 +57,7 @@
       <strong><%= format_duration(@work_session.today_total_seconds) %></strong>
     </p>
     <p class="kv">
-      <span>今日の市場価値</span>
+      <span>今日稼いだ価値</span>
       <strong>¥<%= (@work_session.hour_price * (@work_session.today_total_seconds / 3600.0)).round %></strong>
     </p>
   </section>
