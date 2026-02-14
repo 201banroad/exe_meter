@@ -24,7 +24,7 @@
   <section class="card">
     <p class="now-price">
       <span>現在の価値</span> 
-      <strong>¥<%= @work_session.now_price.round %></strong>
+      <strong>¥<%= number_with_delimiter(@work_session.now_price.round) %></strong>
     </p>
   </section>
 
@@ -49,7 +49,7 @@
     <h2>詳細</h2>
     <p class="kv">
       <span>１時間で稼げる額</span>
-      <strong>¥<%= @work_session.hour_price.round %></strong>
+      <strong>¥<%= number_with_delimiter(@work_session.hour_price.round) %></strong>
     </p>
     
     <h2 class="border-line">今日のサマリー</h2>
@@ -59,7 +59,7 @@
     </p>
     <p class="kv">
       <span>今日稼いだ価値</span>
-      <strong>¥<%= (@work_session.hour_price * (@work_session.today_total_seconds / 3600.0)).round %></strong>
+      <strong>¥<%= number_with_delimiter((@work_session.hour_price * (@work_session.today_total_seconds / 3600.0)).round) %></strong>
     </p>
   </section>
 
