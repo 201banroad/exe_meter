@@ -9,13 +9,14 @@
     <%= csp_meta_tag %>
 
     <%= yield :head %>
-    <!-- Google Analytics -->
+    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKGZZCJXSX"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-XXXXXXX');
+
+      gtag('config', 'G-FKGZZCJXSX');
     </script>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
