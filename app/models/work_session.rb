@@ -1,5 +1,4 @@
 class WorkSession < ApplicationRecord
-    # validates[:target_price >= 0,:target_hours >= 0, ]
 
     has_many :work_intervals, dependent: :destroy
     belongs_to :user
@@ -40,10 +39,10 @@ class WorkSession < ApplicationRecord
     end
 
     # 達成度を0.0〜1.0で表示これは不要かも
-    def progress_ratio
-        return 0.0 if target_price.to_f <= 0
-        [ (now_price / target_price.to_f), 1.0 ].min  # 1 10 0.1
-    end
+    # def progress_ratio
+    #     return 0.0 if target_price.to_f <= 0
+    #     [ (now_price / target_price.to_f), 1.0 ].min  # 1 10 0.1
+    # end
 
 
     def today_total_seconds

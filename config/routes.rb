@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   root "work_sessions#show"
 
   resource :work_session, only: [ :show ] do
-    patch :update_target  # 目標金額/時間の更新
+    patch :update_target
     patch :update_time
     post  :start
     post  :stop
