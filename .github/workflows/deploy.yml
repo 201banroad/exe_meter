@@ -27,6 +27,7 @@ jobs:
             bundle config set without 'development test'
             bundle install
             RAILS_ENV=production rails db:migrate
+            RAILS_ENV=production rails assets:precompile
             sudo systemctl restart puma
           EOF
       
@@ -38,6 +39,7 @@ jobs:
             bundle config set without 'development test'
             bundle install
             RAILS_ENV=production rails db:migrate
+            RAILS_ENV=production rails assets:precompile
             sudo systemctl restart puma
           EOF
 
