@@ -1,34 +1,11 @@
-/* === Mobile-first base === */
-.alert {
-  background-color: #ffe0e0;
-  color: #b30000;
-  border: 1px solid #ffb3b3;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  font-weight: bold;
-  animation: fadeIn 0.4s ease-in-out;
-}
-
-.notice {
-  background-color: #e0ffe0;
-  color: #006600;
-  border: 1px solid #99ff99;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  font-weight: bold;
-  animation: fadeIn 0.4s ease-in-out;
-}
-
+/* === モバイルサイズ === */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-
 body {
-  background: #f7f7f8;
+  background: #f7f7f8df;
   font-family: 'Inter', 'Noto Sans JP', sans-serif;
   color: #111827;
   line-height: 1.6;
@@ -36,29 +13,45 @@ body {
 }
 
 .container {
-  /* max-width: 100%; */
-  /* margin: 0 ; */
-  padding: 16px;             /* モバイルは余白控えめ */
+  padding: 16px;
+}
+
+.alert {
+  background-color: #ffe0e0;
+  color: #b30000;
+  padding: 12px 16px;
+  border: 1px solid #ffb3b3;
+  border-radius: 8px;
+  font-weight: bold;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.notice {
+  background-color: #e0ffe0;
+  color: #006600;
+  padding: 12px 16px;
+  border: 1px solid #99ff99;
+  border-radius: 8px;
+  font-weight: bold;
+  animation: fadeIn 0.4s ease-in-out;
 }
 
 .header {
   display: flex;
-  flex-direction: column;     /* 縦積み */
+  flex-direction: column;
   align-items: flex-start;
   gap: 8px;
   margin-bottom: 20px;
 }
 
 .header h1 {
-  font-size: 20px;            /* 少し小さめからスタート */
-  font-weight: 700;
+  font-size: 24px;
   margin: 0;
 }
 
 .user-info {
   display: flex;
   gap: 10px;
-  align-items: center;
   flex-wrap: wrap;
 }
 
@@ -72,10 +65,70 @@ body {
 .card {
   background: #fff;
   border-radius: 14px;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
-  padding: 16px;              /* モバイルは内側余白も少し軽く */
+  box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;  
   margin-bottom: 16px;
 }
+
+.now-price {
+  text-align: center;
+  padding: 14px 6px;
+  margin: 20px 0;
+  overflow-wrap: break-word;
+}
+
+.now-price span {
+  font-size: 17px;
+  letter-spacing: 0.5px;
+}
+
+.now-price strong {
+  display: block;
+  font-size: 40px;
+  font-weight: 8;
+  margin-top: 8px;
+}
+
+.timer-display {
+  font-family: monospace;
+  font-size: 36px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.btn {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border:none;
+}
+
+.btn + .btn { margin-top: 8px; }
+
+.btn:hover { 
+  opacity:0.95;
+  box-shadow: 0 4px 4px rgba(30, 64, 175, 0.1);
+  transform: translateY(-0.5px);
+}
+
+.btn-primary { background: #2563eb; color: #fff; }
+.btn-secondary { background: #eef2ff; color: #1e40af; }
+.btn-danger { background: #fee2e2; color: #991b1b; }
+
+.kv {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 15px;
+  flex-wrap: wrap;
+}
+.kv strong { font-weight: 600; }
 
 .card h2 {
   font-size: 16px;
@@ -89,9 +142,6 @@ body {
   padding-top: 16px;
 }
 
-
-.field { margin-bottom: 12px; }
-
 .input {
   box-sizing: border-box;  
   width: 100%;
@@ -100,68 +150,6 @@ body {
   border-radius: 8px;
   font-size: 15px;
 }
-
-/* ボタンはモバイルで“縦積み・幅100%”に */
-.btn {
-  box-sizing: border-box;
-  display: block;
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 10px;
-  text-align: center;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn + .btn { margin-top: 8px; }  /* 縦の間隔 */
-
-.btn-primary { background: #2563eb; color: #fff; }
-.btn-primary:hover { background: #1e40af; }
-.btn-secondary { background: #eef2ff; color: #1e40af; }
-.btn-danger { background: #fee2e2; color: #991b1b; }
-
-/* タイマーはモバイルでやや小さめ */
-.timer-display {
-  font-family: monospace;
-  font-size: 36px;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 12px;
-}
-
-/* key-value行は1行で収まらない時は折り返し */
-.kv {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 6px 0;
-  font-size: 15px;
-  flex-wrap: wrap;
-}
-.kv strong { font-weight: 600; }
-
-
-.now-price {
-  text-align: center;
-  padding: 14px 6px;
-  margin: 20px 0;
-}
-
-.now-price span {
-  font-size: 17px;
-  font-weight: 60;
-  letter-spacing: 0.5px;
-}
-
-.now-price strong {
-  display: block;
-  font-size: 40px;
-  font-weight: 8;
-  margin-top: 8px;
-}
-
 
 /* === Larger screens (tablet+) ============================================== */
 @media (min-width: 768px) {
@@ -172,11 +160,9 @@ body {
   }
 
   .header {
-    flex-direction: row;       /* 横並び */
+    flex-direction: row; 
     justify-content: space-between;
-    align-items: center;
     margin-bottom: 32px;
-    gap: 0;
   }
 
   .header h1 { font-size: 22px; }
@@ -184,18 +170,22 @@ body {
   .card h2 { font-size: 18px; margin-bottom: 16px; }
   .field { margin-bottom: 16px; }
 
-  /* ボタンは横並びに戻す */
+  .timer-display { 
+    font-size: 48px; margin-bottom: 16px;
+  }
+
   .btn-group {
     display: flex;
     justify-content: center;
     gap: 12px;
     margin-top: 16px;
   }
-  .btn { display: inline-block; width: auto; }
-  .btn + .btn { margin-top: 0; }
-
-  /* タイマー大きく */
-  .timer-display { font-size: 48px; margin-bottom: 16px; }
+  .btn {
+    display: inline-block; width: auto; 
+  }
+  .btn + .btn { 
+    margin-top: 0; 
+  }
 }
 
 /* === Desktop-wide tweaks === */
