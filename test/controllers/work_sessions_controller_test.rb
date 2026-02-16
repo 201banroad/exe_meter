@@ -29,7 +29,6 @@ class WorkSessionsControllerTest < ActionDispatch::IntegrationTest
         work_session = build_work_session(total_seconds: 0, target_price: 0, target_hours: 0)
         post start_work_session_path
         work_session.reload
-
         assert_equal 1, work_session.work_intervals.where(ended_at: nil).count
         wi = work_session.work_intervals.order(:created_at).last
         assert_not_nil wi.started_at
