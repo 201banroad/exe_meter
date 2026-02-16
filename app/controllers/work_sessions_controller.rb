@@ -20,10 +20,7 @@ class WorkSessionsController < ApplicationController
       now = Time.current
       @work_session.update!(started_at: now, ended_at: nil)
 
-      # 新しいWorkIntervalを作り、進行中のWorkIntervalがもしある場合はそれを使う（途中で中断された時などもしものため）
-      @work_session.work_intervals.find_or_create_by!(ended_at: nil) do |wi|
-        wi.started_at = now
-      end
+      @work_session.work_intervals.create!(started_at: now, ended_at: nil)
     end
     redirect_to root_path, notice: "計測を開始しました"
   end
@@ -49,7 +46,7 @@ class WorkSessionsController < ApplicationController
 
 
   def reset
-    # 未完了の WorkInterval は削除（履歴は残す方針なので完了済みは残す）
+    # 未完了の WorkInterval は削除（完了済みは今日のサマリーで使うので残す）
     @work_session.work_intervals.where(ended_at: nil).delete_all
 
     if @work_session.update(total_seconds: 0, started_at: nil, ended_at: nil)
@@ -68,7 +65,6 @@ class WorkSessionsController < ApplicationController
     redirect_to root_path, notice: "手動で時間を更新しました"
 
     rescue ActiveRecord::RecordInvalid => e
-      # flash.now[:alert] = e.record.errors.full_messages.to_sentence
       @work_session = e.record
       flash.discard(:notice) # 前に表示されてたリセットしました等を消す
       flash.now[:alert] = "時間更新に失敗しました"
