@@ -1,5 +1,4 @@
 class WorkSession < ApplicationRecord
-
     has_many :work_intervals, dependent: :destroy
     belongs_to :user
 
