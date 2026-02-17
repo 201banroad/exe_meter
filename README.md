@@ -48,7 +48,7 @@ https://exp-meter.com<br>
 - CircleCi CI/CD
 - AWS
     - VPC
-    - EC2s
+    - EC2
     - RDS
     - Route53
     - ALB
