@@ -5,16 +5,6 @@ class WorkSessionsController < ApplicationController
   def show
   end
 
-  def update_target
-    if @work_session.update(params.require(:work_session).permit(:target_price, :target_hours))
-      redirect_to root_path, notice: "目標を更新しました"
-    else
-      flash.now[:alert] = "目標の更新に失敗しました"
-      render :show, status: :unprocessable_entity
-    end
-  end
-
-
   def start
     unless @work_session.running?
       now = Time.current
@@ -53,6 +43,15 @@ class WorkSessionsController < ApplicationController
       redirect_to root_path, notice: "リセットしました"
     else
       redirect_to root_path, alert: "リセットに失敗しました"
+    end
+  end
+
+  def update_target
+    if @work_session.update(params.require(:work_session).permit(:target_price, :target_hours))
+      redirect_to root_path, notice: "目標を更新しました"
+    else
+      flash.now[:alert] = "目標の更新に失敗しました"
+      render :show, status: :unprocessable_entity
     end
   end
 
