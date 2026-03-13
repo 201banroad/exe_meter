@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_10_052905) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_13_054024) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -38,8 +38,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_10_052905) do
   end
 
   create_table "work_sessions", force: :cascade do |t|
-    t.datetime "started_at"
-    t.datetime "ended_at"
     t.integer "total_seconds"
     t.integer "target_price"
     t.datetime "created_at", null: false
