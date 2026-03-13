@@ -15,17 +15,17 @@ class WorkSession < ApplicationRecord
     end
 
     def live_seconds # 経過秒数。タイマー走っている場合と止まってる場合
+        last_interval = work_intervals.order(:created_at).last
         if running?
-            persisted_seconds + (Time.current - started_at).to_i
+            persisted_seconds + (Time.current - last_interval.started_at).to_i
         else
             persisted_seconds
         end
     end
 
-    def live_hours # 秒数を時間に変換 経過”時間”
-        live_seconds / 3600.0
-    end
-
+    # def live_hours # 秒数を時間に変換 経過”時間”
+    #     persisted_seconds / 3600.0
+    # end
 
     # １時間で稼げる金額 = 目標金額 ÷ 目標時間　０除算ガードのために０以下だったら０を返す
     def hour_price
@@ -33,19 +33,19 @@ class WorkSession < ApplicationRecord
         target_price.to_f / target_hours.to_f
     end
 
-    # いままでの取り組みで“稼いだ価値”　１時給 × これまでの経過時間
-    def now_price
-        hour_price * live_hours
+    # 1秒で稼げる金額
+    def second_price
+        hour_price / 3600.0
     end
 
-    # 達成度を0.0〜1.0で表示これは不要かも
-    # def progress_ratio
-    #     return 0.0 if target_price.to_f <= 0
-    #     [ (now_price / target_price.to_f), 1.0 ].min  # 1 10 0.1
-    # end
+    # いままでの取り組みで“稼いだ価値”　1秒あたりの金額 × これまでの経過秒数
+    def now_price
+        second_price * persisted_seconds
+    end
 
 
-    def today_total_seconds
+
+    def today_total_time
         today_range = Time.zone.today.all_day
 
         if persisted? # 保存済み → DBにあるデータをSQLで集計する（速い・本番用）。
@@ -85,6 +85,6 @@ class WorkSession < ApplicationRecord
 
         manual_seconds = hh * 3600 + mm * 60 + ss
 
-        update!(total_seconds: manual_seconds, started_at: nil, ended_at: nil)
+        update!(total_seconds: manual_seconds)
     end
 end

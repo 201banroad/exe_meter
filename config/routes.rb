@@ -17,6 +17,9 @@ Rails.application.routes.draw do
   resource :work_session, only: [ :show ] do
     patch :update_target
     patch :update_time
+  end
+
+  resource :work_intervals do
     post  :start
     post  :stop
     post  :reset

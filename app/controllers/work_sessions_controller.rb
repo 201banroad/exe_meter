@@ -5,47 +5,6 @@ class WorkSessionsController < ApplicationController
   def show
   end
 
-  def start
-    unless @work_session.running?
-      now = Time.current
-      @work_session.update!(started_at: now, ended_at: nil)
-
-      @work_session.work_intervals.create!(started_at: now, ended_at: nil)
-    end
-    redirect_to root_path, notice: "計測を開始しました"
-  end
-
-  def stop
-    if @work_session.running?
-      now = Time.current
-      wi = @work_session.work_intervals.find_by(ended_at: nil)
-
-      if wi
-        gain = (now - wi.started_at).to_i
-        wi.update!(ended_at: now, duration_sec: gain)
-      else
-        # 念のため保険としてあまり起こらないけどWIが無いとき、なくてもここでは新しく作らない、あくまでStopの処理なので
-        gain = (now - @work_session.started_at).to_i
-      end
-
-      # セッションの停止と累積秒の更新
-      @work_session.update!(ended_at: now, total_seconds: @work_session.persisted_seconds + gain)
-    end
-    redirect_to root_path, notice: "計測を停止しました"
-  end
-
-
-  def reset
-    # 未完了の WorkInterval は削除（完了済みは今日のサマリーで使うので残す）
-    @work_session.work_intervals.where(ended_at: nil).delete_all
-
-    if @work_session.update(total_seconds: 0, started_at: nil, ended_at: nil)
-      redirect_to root_path, notice: "リセットしました"
-    else
-      redirect_to root_path, alert: "リセットに失敗しました"
-    end
-  end
-
   def update_target
     if @work_session.update(params.require(:work_session).permit(:target_price, :target_hours))
       redirect_to root_path, notice: "目標を更新しました"
