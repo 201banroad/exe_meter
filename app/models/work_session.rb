@@ -5,8 +5,9 @@ class WorkSession < ApplicationRecord
     validates :target_price, numericality: { greater_than_or_equal_to: 0 }, presence: true
     validates :target_hours, numericality: { greater_than_or_equal_to: 0, less_than: 100_000 }, presence: true
 
-    def running?   # セッションが進行中かどうか
-        started_at.present? && ended_at.nil?
+    def running? #最新のレコードの有無を判定→そのレコードのエンドがNilかを判定
+        last_interval = work_intervals.order(:created_at).last
+        last_interval.present? && last_interval.ended_at.nil?
     end
 
     def persisted_seconds # 合計秒数。total_seconds がnilのときは 0 を返す（計算時のエラー防止）
