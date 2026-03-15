@@ -19,7 +19,6 @@ class WorkIntervalsController < ApplicationController
         gain = (now - wi.started_at).to_i
         wi.update!(ended_at: now, duration_sec: gain)#durationは今日分のインターバル集計用
       end
-      
       @work_session.update!(total_seconds: @work_session.persisted_seconds + gain)
 
     end

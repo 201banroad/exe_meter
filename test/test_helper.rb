@@ -25,8 +25,7 @@ class ActionDispatch::IntegrationTest < ActiveSupport::TestCase
       total_seconds: 0,
       target_price:  0,
       target_hours:  0,
-      started_at:    nil,
-      ended_at:      nil,
+      # started_at/ended_atはWorkSessionから削除
       user:          user
     }
     WorkSession.create!(defaults.merge(attrs))
