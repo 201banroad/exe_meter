@@ -8,7 +8,7 @@ class WorkSessionsControllerTest < ActionDispatch::IntegrationTest
     end
 
     test "requires login for work_session" do
-        sign_out @user
+        sign_out :user
         get work_session_path
         assert_redirected_to new_user_session_path
     end

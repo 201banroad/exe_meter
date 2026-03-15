@@ -19,7 +19,7 @@ end
 class ActionDispatch::IntegrationTest < ActiveSupport::TestCase
   include Devise::Test::IntegrationHelpers
 
-  def build_work_session(attrs = {}) # 引数があればそれをデフォルトに上書きし、メソッド名だけでつまり空で呼び出したらデフォルトが使われる
+  def build_work_session (attrs = {}) # 引数があればそれをデフォルトに上書きし、メソッド名だけでつまり空で呼び出したらデフォルトが使われる
     user = attrs.delete(:user) || @user # ハッシュからユーザーを取り出して変数に入れる、なかったら定義されてる@userを使う
     defaults = {
       total_seconds: 0,
