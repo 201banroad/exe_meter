@@ -34,14 +34,14 @@ class WorkSessionsControllerTest < ActionDispatch::IntegrationTest
     test "reset twice is idempotent" do
         work_session = build_work_session(total_seconds: 50)
 
-        # 1回目のリセット
+            # 1回目のリセット
             post reset_work_intervals_path
         work_session.reload
         assert_equal 0, work_session.total_seconds
         assert_redirected_to root_path
         assert_equal "リセットしました", flash[:notice]
 
-        # 2回目のリセット（何も変わらないことを確認）
+            # 2回目のリセット（何も変わらないことを確認）
             post reset_work_intervals_path
         work_session.reload
         assert_equal 0, work_session.total_seconds
