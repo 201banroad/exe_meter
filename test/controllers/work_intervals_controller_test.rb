@@ -19,7 +19,7 @@ class WorkIntervalsControllerTest < ActionDispatch::IntegrationTest
     assert_nil wi.ended_at
     assert_redirected_to root_path
   end
-  
+
     test "stop ends running interval and updates total_seconds" do
       work_session = build_work_session(total_seconds: 10)
       now = Time.current.change(usec: 0)
@@ -83,5 +83,4 @@ class WorkIntervalsControllerTest < ActionDispatch::IntegrationTest
       assert_redirected_to root_path
       assert_equal "リセットしました", flash[:notice]
     end
-    
 end

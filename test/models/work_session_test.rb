@@ -3,8 +3,6 @@ require "test_helper"
 class WorkSessionTest < ActiveSupport::TestCase
   include ActiveSupport::Testing::TimeHelpers
 
-  # 102なんでこれでValid期待
-  # 113
 
   def setup
     @user = User.create!(email: "model@example.com", username: "model_tester", password: "password1")

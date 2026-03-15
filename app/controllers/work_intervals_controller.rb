@@ -17,7 +17,7 @@ class WorkIntervalsController < ApplicationController
 
       if wi
         gain = (now - wi.started_at).to_i
-        wi.update!(ended_at: now, duration_sec: gain)#durationは今日分のインターバル集計用
+        wi.update!(ended_at: now, duration_sec: gain) # durationは今日分のインターバル集計用
       end
       @work_session.update!(total_seconds: @work_session.persisted_seconds + gain)
 
@@ -38,9 +38,8 @@ class WorkIntervalsController < ApplicationController
 
   private
 
-    def load_session #ユーザーの情報は、アソシエーションの関係で、WSから持ってくる
+    def load_session # ユーザーの情報は、アソシエーションの関係で、WSから持ってくる
         @work_session = current_user.work_session || current_user.create_work_session!(total_seconds: 0, target_price: 0, target_hours: 0)
         @work_interval = @work_session.work_intervals.order(:created_at).last
     end
-
 end
