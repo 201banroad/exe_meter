@@ -8,7 +8,7 @@ class WorkSessionTest < ActiveSupport::TestCase
     @user = User.create!(email: "model@example.com", username: "model_tester", password: "password1")
   end
 
-  test "running? returns true when latest work_interval is in progress" do
+  test "running test" do
     work_session = WorkSession.create!(user: @user, target_price: 0, target_hours: 0, total_seconds: 0)
     work_session.work_intervals.create!(started_at: Time.current, ended_at: nil)
     assert work_session.running?
