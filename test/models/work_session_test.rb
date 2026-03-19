@@ -9,13 +9,13 @@ class WorkSessionTest < ActiveSupport::TestCase
   end
 
   test "running test" do
-    work_session = WorkSession.create!(user: @user, target_price: 0, target_hours: 0, total_seconds: 0)
+    work_session = build_work_session
     work_session.work_intervals.create!(started_at: Time.current, ended_at: nil)
     assert work_session.running?
   end
 
   test "running? returns false when latest work_interval is finished" do
-    work_session = WorkSession.create!(user: @user, target_price: 0, target_hours: 0, total_seconds: 0)
+    work_session = build_work_session
     work_session.work_intervals.create!(started_at: Time.current, ended_at: Time.current)
     assert_not work_session.running?
   end
@@ -38,7 +38,7 @@ class WorkSessionTest < ActiveSupport::TestCase
   test "live_seconds adds elapsed time when running" do
     base_time = Time.current.change(usec: 0) # ミリ秒の誤差を消す
     travel_to(base_time) do
-      work_session = WorkSession.create!(user: @user, total_seconds: 100, target_price: 0, target_hours: 0)
+      work_session = build_work_session(total_seconds: 100)
       work_session.work_intervals.create!(started_at: Time.current, ended_at: nil)
       travel 2.seconds
       assert_equal 102, work_session.live_seconds
@@ -73,7 +73,7 @@ class WorkSessionTest < ActiveSupport::TestCase
   test "now_price during run uses persisted_seconds only (integer case)" do
     base_time = Time.current.change(usec: 0) # ミリ秒の誤差を消す
     travel_to(base_time) do
-      work_session = WorkSession.create!(user: @user, target_price: 1000, target_hours: 2, total_seconds: 3600)
+      work_session = build_work_session(target_price: 1000, target_hours: 2, total_seconds: 3600)
       work_session.work_intervals.create!(started_at: Time.current, ended_at: nil)
       travel 7200.seconds
       assert_equal 500, work_session.now_price
@@ -83,7 +83,7 @@ class WorkSessionTest < ActiveSupport::TestCase
   test "now_price during run uses persisted_seconds only with fractional hour" do
     base_time = Time.current.change(usec: 0) # ミリ秒の誤差を消す
     travel_to(base_time) do
-      work_session = WorkSession.create!(user: @user, target_price: 1200, target_hours: 2, total_seconds: 1800)
+      work_session = build_work_session(target_price: 1200, target_hours: 2, total_seconds: 1800)
       work_session.work_intervals.create!(started_at: Time.current, ended_at: nil)
       travel 3600.seconds
       assert_in_delta 300, work_session.now_price, 0.01
@@ -162,7 +162,7 @@ class WorkSessionTest < ActiveSupport::TestCase
   end
 
   test "update_manual_time! sets total_seconds when format is valid" do
-    ws = WorkSession.create!(user: @user, target_price: 0, target_hours: 1, total_seconds: 0)
+    ws = build_work_session(target_hours: 1)
 
     ws.update_manual_time!("01:30:00")
     ws.reload
@@ -171,7 +171,7 @@ class WorkSessionTest < ActiveSupport::TestCase
   end
 
   test "update_manual_time! raises and sets errors when format is invalid" do
-    ws = WorkSession.create!(user: @user, target_price: 0, target_hours: 1, total_seconds: 0)
+    ws = build_work_session(target_hours: 1)
 
     assert_raises ActiveRecord::RecordInvalid do
       ws.update_manual_time!("1:99:00")       # 分・秒が 00..59 を超える
