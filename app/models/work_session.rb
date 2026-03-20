@@ -2,7 +2,7 @@ class WorkSession < ApplicationRecord
     has_many :work_intervals, dependent: :destroy
     belongs_to :user
 
-    validates :target_price, numericality: { greater_than_or_equal_to: 0 }, presence: true
+    validates :target_price, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, presence: true
     validates :target_hours, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: 100_000 }, presence: true
 
     def running? # 最新のレコードの有無を判定→そのレコードのエンドがNilかを判定
@@ -42,8 +42,6 @@ class WorkSession < ApplicationRecord
     def now_price
         second_price * persisted_seconds
     end
-
-
 
     def today_total_time
         today_range = Time.zone.today.all_day

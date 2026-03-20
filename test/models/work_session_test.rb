@@ -55,12 +55,17 @@ class WorkSessionTest < ActiveSupport::TestCase
     assert_equal 500, work_session.hour_price
   end
 
-  test "now_price multiplies hour_price and live_hours when stopped" do# 停止中の整数ケース
+  test "second_price test" do
+    work_session = WorkSession.new(user: @user, target_price: 3600, target_hours: 1)
+    assert_equal 1, work_session.second_price
+  end
+
+  test "now_price simple test" do# 停止中の整数ケース
     work_session = WorkSession.new(user: @user, target_price: 1000, target_hours: 2, total_seconds: 7200)
     assert_equal 1000, work_session.now_price
   end
 
-  test "now_price returns correct value when live_hours is decimal" do  # 停止中の少数ケース
+  test "now_price when second_price is decimal" do
     work_session = WorkSession.new(user: @user, target_price: 1200, target_hours: 2, total_seconds: 5400)
     assert_in_delta 900, work_session.now_price, 0.01
   end
@@ -104,6 +109,11 @@ class WorkSessionTest < ActiveSupport::TestCase
 
   test "target_hours is invalid when decimal" do
     work_session = WorkSession.new(user: @user, target_price: 1, target_hours: 1.5)
+    assert_not work_session.valid?
+  end
+
+  test "target_price is invalid when decimal" do
+    work_session = WorkSession.new(user: @user, target_price: 1.5, target_hours: 1)
     assert_not work_session.valid?
   end
 

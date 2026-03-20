@@ -28,6 +28,16 @@ class WorkSessionsControllerTest < ActionDispatch::IntegrationTest
         assert_equal 2, work_session.target_hours.to_i
     end
 
+    test "update_target rejects decimal target_price" do
+        work_session = build_work_session(target_price: 1000, target_hours: 2)
+
+        patch update_target_work_session_path, params: { work_session: { target_price: 1000.5, target_hours: 2 } }
+
+        work_session.reload
+        assert_response :unprocessable_entity
+        assert_equal 1000, work_session.target_price
+    end
+
 
 
     test "reset clears past completed work_session and zeroes total_seconds" do # 履歴のセッションに対してもリセットできるか
