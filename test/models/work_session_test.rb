@@ -8,13 +8,13 @@ class WorkSessionTest < ActiveSupport::TestCase
     @user = User.create!(email: "model@example.com", username: "model_tester", password: "password1")
   end
 
-  test "running test" do
+  test "running? test" do
     work_session = build_work_session
     work_session.work_intervals.create!(started_at: Time.current, ended_at: nil)
     assert work_session.running?
   end
 
-  test "running? returns false when latest work_interval is finished" do
+  test "not running? test" do
     work_session = build_work_session
     work_session.work_intervals.create!(started_at: Time.current, ended_at: Time.current)
     assert_not work_session.running?
@@ -35,7 +35,7 @@ class WorkSessionTest < ActiveSupport::TestCase
     assert_equal 100, work_session.live_seconds
   end
 
-  test "live_seconds adds elapsed time when running" do
+  test "live_seconds adds time when running" do
     base_time = Time.current.change(usec: 0) # ミリ秒の誤差を消す
     travel_to(base_time) do
       work_session = build_work_session(total_seconds: 100)
@@ -50,14 +50,9 @@ class WorkSessionTest < ActiveSupport::TestCase
     assert_equal 0, work_session.hour_price
   end
 
-  test "hour_price returns correct value when target_price and target_hours are positive" do
+  test "hour_price simple test" do
     work_session = WorkSession.new(user: @user, target_price: 1000, target_hours: 2)
     assert_equal 500, work_session.hour_price
-  end
-
-  test "hour_price returns correct decimal when target_hours is 1.5" do
-    work_session = WorkSession.new(user: @user, target_price: 1000, target_hours: 1.5)
-    assert_in_delta 666.67, work_session.hour_price, 0.1
   end
 
   test "now_price multiplies hour_price and live_hours when stopped" do# 停止中の整数ケース
@@ -102,9 +97,14 @@ class WorkSessionTest < ActiveSupport::TestCase
     assert work_session.valid?
   end
 
-  test "target_price and target_hours are valid when positive numbers (including decimal hours)" do
-    work_session = WorkSession.new(user: @user, target_price: 1, target_hours: 1.5)
+  test "target_price and target_hours are valid when positive integers" do
+    work_session = WorkSession.new(user: @user, target_price: 1, target_hours: 1)
     assert work_session.valid?
+  end
+
+  test "target_hours is invalid when decimal" do
+    work_session = WorkSession.new(user: @user, target_price: 1, target_hours: 1.5)
+    assert_not work_session.valid?
   end
 
   test "target_price and target_hours are invalid when nil" do
@@ -118,10 +118,10 @@ class WorkSessionTest < ActiveSupport::TestCase
   end
 
   test "target_hours is valid below 100_000 and invalid at 100_000" do
-    ok  = WorkSession.new(user: @user, target_price: 0, target_hours: 99_999.9)
+    ok  = WorkSession.new(user: @user, target_price: 0, target_hours: 99_999)
     ng  = WorkSession.new(user: @user, target_price: 0, target_hours: 100_000)
 
-    assert ok.valid?, "99_999.9 should be valid"
+    assert ok.valid?, "99_999 should be valid"
     assert_not ng.valid?, "100_000 should be invalid"
   end
 
