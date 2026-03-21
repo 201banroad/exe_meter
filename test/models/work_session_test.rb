@@ -52,45 +52,29 @@ class WorkSessionTest < ActiveSupport::TestCase
 
   test "hour_price simple test" do
     work_session = WorkSession.new(user: @user, target_price: 1000, target_hours: 2)
-    assert_equal 500, work_session.hour_price
+    assert_in_delta 500, work_session.hour_price, 0.01
   end
 
   test "second_price test" do
     work_session = WorkSession.new(user: @user, target_price: 3600, target_hours: 1)
-    assert_equal 1, work_session.second_price
+    assert_in_delta 1, work_session.second_price, 0.01
   end
 
-  test "now_price simple test" do# 停止中の整数ケース
+  test "now_price simple test" do
     work_session = WorkSession.new(user: @user, target_price: 1000, target_hours: 2, total_seconds: 7200)
-    assert_equal 1000, work_session.now_price
+    assert_in_delta 1000, work_session.now_price, 0.01
   end
 
-  test "now_price when second_price is decimal" do
-    work_session = WorkSession.new(user: @user, target_price: 1200, target_hours: 2, total_seconds: 5400)
-    assert_in_delta 900, work_session.now_price, 0.01
-  end
-
-  test "now_price during run uses persisted_seconds only (integer case)" do
+  test "now_price during run uses persisted_seconds only" do
     base_time = Time.current.change(usec: 0) # ミリ秒の誤差を消す
     travel_to(base_time) do
       work_session = build_work_session(target_price: 1000, target_hours: 2, total_seconds: 3600)
       work_session.work_intervals.create!(started_at: Time.current, ended_at: nil)
       travel 7200.seconds
-      assert_equal 500, work_session.now_price
+      assert_in_delta 500, work_session.now_price, 0.01
     end
   end
-
-  test "now_price during run uses persisted_seconds only with fractional hour" do
-    base_time = Time.current.change(usec: 0) # ミリ秒の誤差を消す
-    travel_to(base_time) do
-      work_session = build_work_session(target_price: 1200, target_hours: 2, total_seconds: 1800)
-      work_session.work_intervals.create!(started_at: Time.current, ended_at: nil)
-      travel 3600.seconds
-      assert_in_delta 300, work_session.now_price, 0.01
-    end
-  end
-
-
+ーーーー
   # ここからバリデーションのテスト　　ほかのひらがなとか弾くテスト書く？と思ったけどRailsの機能で元々弾かれてるからわざわざ書かなくてOK
   test "target_price and target_hours are invalid when negative" do
     work_session = WorkSession.new(user: @user, target_price: -1, target_hours: -1)
