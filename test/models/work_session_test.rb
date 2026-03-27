@@ -74,7 +74,60 @@ class WorkSessionTest < ActiveSupport::TestCase
       assert_in_delta 500, work_session.now_price, 0.01
     end
   end
-ーーーー
+
+  test "today_total_time sums only today's finished intervals" do
+    travel_to Time.zone.local(2025, 9, 18, 12, 0, 0) do
+      work_session = build_work_session(total_seconds: 0, target_price: 0, target_hours: 0)
+
+      # 昨日の完了区間（含まれない）
+      work_session.work_intervals.create!(
+        started_at: 1.day.ago,
+        ended_at: 1.day.ago + 120,
+        duration_sec: 120
+      )
+
+      # 今日の完了区間（含まれる）
+      work_session.work_intervals.create!(
+        started_at: Time.zone.now,
+        ended_at: Time.zone.now + 60,
+        duration_sec: 60
+      )
+
+      work_session.work_intervals.create!(
+        started_at: Time.zone.now,
+        ended_at: Time.zone.now + 120,
+        duration_sec: 120
+      )
+
+      # 今日の進行中（含まれない）
+      work_session.work_intervals.create!(
+        started_at: Time.zone.now,
+        ended_at: nil,
+        duration_sec: nil
+      )
+
+      assert_equal 180, work_session.today_total_time
+    end
+  end
+
+  test "update_manual_time! sets total_seconds when format is valid" do
+    ws = build_work_session(target_hours: 1)
+
+    ws.update_manual_time!("01:30:00")
+    ws.reload
+
+    assert_equal 5400, ws.total_seconds       # 1.5h
+  end
+
+  test "update_manual_time! raises and sets errors when format is invalid" do
+    ws = build_work_session(target_hours: 1)
+
+    assert_raises ActiveRecord::RecordInvalid do
+      ws.update_manual_time!("1:99:00")       # 分・秒が 00..59 を超える
+    end
+    assert ws.errors[:manual_time].present?
+  end
+
   # ここからバリデーションのテスト　　ほかのひらがなとか弾くテスト書く？と思ったけどRailsの機能で元々弾かれてるからわざわざ書かなくてOK
   test "target_price and target_hours are invalid when negative" do
     work_session = WorkSession.new(user: @user, target_price: -1, target_hours: -1)
@@ -117,59 +170,5 @@ class WorkSessionTest < ActiveSupport::TestCase
 
     assert ok.valid?, "99_999 should be valid"
     assert_not ng.valid?, "100_000 should be invalid"
-  end
-
-
-  test "today_total_time sums only today's finished intervals" do
-    travel_to Time.zone.local(2025, 9, 18, 12, 0, 0) do
-      work_session = WorkSession.new(user: @user, total_seconds: 0, target_price: 0, target_hours: 0)
-
-      # 昨日の完了区間（含まれない）
-      work_session.work_intervals << WorkInterval.new(
-        started_at: 1.day.ago,
-        ended_at: 1.day.ago + 120,
-        duration_sec: 120
-      )
-
-      # 今日の完了区間（含まれる）
-      work_session.work_intervals << WorkInterval.new(
-        started_at: Time.zone.now,
-        ended_at: Time.zone.now + 60,
-        duration_sec: 60
-      )
-
-      work_session.work_intervals << WorkInterval.new(
-        started_at: Time.zone.now,
-        ended_at: Time.zone.now + 120,
-        duration_sec: 120
-      )
-
-      # 今日の進行中（含まれない）
-      work_session.work_intervals << WorkInterval.new(
-        started_at: Time.zone.now,
-        ended_at: nil,
-        duration_sec: nil
-      )
-
-      assert_equal 180, work_session.today_total_time
-    end
-  end
-
-  test "update_manual_time! sets total_seconds when format is valid" do
-    ws = build_work_session(target_hours: 1)
-
-    ws.update_manual_time!("01:30:00")
-    ws.reload
-
-    assert_equal 5400, ws.total_seconds       # 1.5h
-  end
-
-  test "update_manual_time! raises and sets errors when format is invalid" do
-    ws = build_work_session(target_hours: 1)
-
-    assert_raises ActiveRecord::RecordInvalid do
-      ws.update_manual_time!("1:99:00")       # 分・秒が 00..59 を超える
-    end
-    assert ws.errors[:manual_time].present?
   end
 end
