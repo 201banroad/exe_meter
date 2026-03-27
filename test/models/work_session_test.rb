@@ -111,16 +111,16 @@ class WorkSessionTest < ActiveSupport::TestCase
   end
 
   test "update_manual_time! sets total_seconds when format is valid" do
-    ws = build_work_session(target_hours: 1)
+    ws = build_work_session
 
     ws.update_manual_time!("01:30:00")
     ws.reload
 
-    assert_equal 5400, ws.total_seconds       # 1.5h
+    assert_equal 5400, ws.total_seconds 
   end
 
   test "update_manual_time! raises and sets errors when format is invalid" do
-    ws = build_work_session(target_hours: 1)
+    ws = build_work_session
 
     assert_raises ActiveRecord::RecordInvalid do
       ws.update_manual_time!("1:99:00")       # 分・秒が 00..59 を超える
@@ -144,11 +144,6 @@ class WorkSessionTest < ActiveSupport::TestCase
     assert work_session.valid?
   end
 
-  test "target_hours is invalid when decimal" do
-    work_session = WorkSession.new(user: @user, target_price: 1, target_hours: 1.5)
-    assert_not work_session.valid?
-  end
-
   test "target_price is invalid when decimal" do
     work_session = WorkSession.new(user: @user, target_price: 1.5, target_hours: 1)
     assert_not work_session.valid?
@@ -164,11 +159,17 @@ class WorkSessionTest < ActiveSupport::TestCase
     assert_not work_session.valid?
   end
 
-  test "target_hours is valid below 100_000 and invalid at 100_000" do
-    ok  = WorkSession.new(user: @user, target_price: 0, target_hours: 99_999)
-    ng  = WorkSession.new(user: @user, target_price: 0, target_hours: 100_000)
 
-    assert ok.valid?, "99_999 should be valid"
-    assert_not ng.valid?, "100_000 should be invalid"
+  test "target_hours is invalid when decimal" do
+    work_session = WorkSession.new(user: @user, target_price: 1, target_hours: 1.5)
+    assert_not work_session.valid?
+  end
+
+  test "target_hours is valid below 1_000_000 and invalid at 1_000_000" do
+    ok  = WorkSession.new(user: @user, target_price: 0, target_hours: 999_999)
+    ng  = WorkSession.new(user: @user, target_price: 0, target_hours: 1_000_000)
+
+    assert ok.valid?, "999_999 should be valid"
+    assert_not ng.valid?, "1_000_000 should be invalid"
   end
 end
