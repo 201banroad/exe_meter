@@ -119,6 +119,26 @@ class WorkSessionTest < ActiveSupport::TestCase
     assert_equal 5400, ws.total_seconds 
   end
 
+  test "update_manual_time! raises and sets errors when input is blank" do
+    ws = build_work_session
+
+    assert_raises ActiveRecord::RecordInvalid do
+      ws.update_manual_time!("")
+    end
+
+    assert ws.errors[:manual_time].present?
+  end
+
+  test "update_manual_time! raises and sets errors when format is malformed" do
+    ws = build_work_session
+
+    assert_raises ActiveRecord::RecordInvalid do
+      ws.update_manual_time!("1:2")
+    end
+
+    assert ws.errors[:manual_time].present?
+  end
+
   test "update_manual_time! raises and sets errors when format is invalid" do
     ws = build_work_session
 
