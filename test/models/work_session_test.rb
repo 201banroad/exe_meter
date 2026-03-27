@@ -116,7 +116,7 @@ class WorkSessionTest < ActiveSupport::TestCase
     ws.update_manual_time!("01:30:00")
     ws.reload
 
-    assert_equal 5400, ws.total_seconds 
+    assert_equal 5400, ws.total_seconds
   end
 
   test "update_manual_time! raises and sets errors when input is blank" do
