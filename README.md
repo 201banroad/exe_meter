@@ -6,7 +6,7 @@
 本リポジトリは、タイマーで努力時間を計測し、現在の努力の価値を金額として可視化できる、シンプルなアプリです。<br>
 ![アプリ画面](readme_image/show.png)
 
-##  ■ アプリURL
+##  ■ アプリURL（現在公開停止しています❌）
 https://exp-meter.com<br>
 (ゲストIDでログイン可能です)<br>
 ■Email: a@gmail.com<br>
